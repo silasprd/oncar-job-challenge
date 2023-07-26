@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	dbConn, err := db.OpenConnection()
+	dbConn, err := db.OpenConnection("./.env")
 	if err != nil {
 		fmt.Println("Erro ao conectar ao banco de dados:", err)
 		return

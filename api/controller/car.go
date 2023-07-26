@@ -48,6 +48,7 @@ func (c *CarController) ListCarsHandler(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, "Erro ao serializar a lista de carros", http.StatusInternalServerError)
 		return
 	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(carJSON)
 }

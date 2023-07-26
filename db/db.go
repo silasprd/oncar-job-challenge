@@ -1,17 +1,32 @@
 package db
 
 import (
+	"fmt"
 	model "oncar-job-challenge/api/model"
 
+	"os"
+
+	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 var db *gorm.DB
 
-func OpenConnection() (*gorm.DB, error) {
+func OpenConnection(envPath string) (*gorm.DB, error) {
 
-	dsn := "root:root@tcp(127.0.0.1:3306)/oncar?charset=utf8mb4&parseTime=True&loc=Local"
+	err := godotenv.Load(envPath)
+	if err != nil {
+		return nil, fmt.Errorf("Erro ao carregar variáveis de ambiente: %w", err)
+	}
+
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbUser, dbPassword, dbHost, dbPort, dbName)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
