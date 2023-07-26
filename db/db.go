@@ -9,19 +9,43 @@ import (
 
 var db *gorm.DB
 
-func ConnectDB() (*gorm.DB, error) {
+func OpenConnection() (*gorm.DB, error) {
 
-	dsn := "root:TelLink1020@tcp(127.0.0.1:5171)/oncar?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "root:root@tcp(127.0.0.1:3306)/oncar?charset=utf8mb4&parseTime=True&loc=Local"
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}
 
-	err = db.AutoMigrate(&model.Car{})
+	return db, nil
+
+}
+
+func AutoMigrateTables(db *gorm.DB) error {
+
+	err := db.AutoMigrate(&model.Car{})
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return db, nil
+	return nil
+
 }
+
+// func ConnectDB() (*gorm.DB, error) {
+
+// 	dsn := "root:root@tcp(127.0.0.1:3306)/oncar?charset=utf8mb4&parseTime=True&loc=Local"
+
+// 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	err = db.AutoMigrate(&model.Car{})
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	return db, nil
+// }

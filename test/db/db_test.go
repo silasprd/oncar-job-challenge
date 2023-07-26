@@ -9,8 +9,8 @@ import (
 )
 
 func TestConnectDB(t *testing.T) {
-	dbConn, err := db.ConnectDB()
 
+	dbConn, err := db.OpenConnection()
 	assert.Nil(t, err)
 	assert.NotNil(t, dbConn)
 

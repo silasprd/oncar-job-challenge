@@ -3,6 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	models "oncar-job-challenge/api/model"
 	"oncar-job-challenge/api/service"
@@ -53,13 +54,15 @@ func (c *CarController) ListCarsHandler(w http.ResponseWriter, r *http.Request) 
 
 func (c *CarController) GetCarHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	idStr, ok := vars["id"]
-	if !ok {
+	idStr := vars["id"]
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
 		http.Error(w, "ID do carro inválido", http.StatusBadRequest)
 		return
 	}
 
-	car, err := c.carService.GetCarByID(idStr)
+	car, err := c.carService.GetCarByID(uint(id))
 	if err != nil {
 		http.Error(w, "Carro não encontrado", http.StatusNotFound)
 		return
@@ -73,4 +76,22 @@ func (c *CarController) GetCarHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(carJSON)
+}
+
+func (c *CarController) DeleteCarHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	idStr := vars["id"]
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "ID do carro inválido", http.StatusBadRequest)
+		return
+	}
+
+	if err := c.carService.DeleteCar(uint(id)); err != nil {
+		http.Error(w, "Erro ao deletar o carro", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }

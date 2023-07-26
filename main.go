@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	dbConn, err := db.ConnectDB()
+	dbConn, err := db.OpenConnection()
 	if err != nil {
 		fmt.Println("Erro ao conectar ao banco de dados:", err)
 		return
@@ -26,6 +26,12 @@ func main() {
 		sqlDB.Close()
 	}()
 
+	err = db.AutoMigrateTables(dbConn)
+	if err != nil {
+		fmt.Println("Erro ao realizar auto migrate das tabelas:", err)
+		return
+	}
+
 	carService := service.NewCarService(dbConn)
 
 	carController := controller.NewCarController(carService)
@@ -35,7 +41,8 @@ func main() {
 	router.HandleFunc("/carros", carController.ListCarsHandler).Methods("GET")
 	router.HandleFunc("/carros", carController.AddCarHandler).Methods("POST")
 	router.HandleFunc("/carros/{id}", carController.GetCarHandler).Methods("GET")
+	router.HandleFunc("/carros/{id}", carController.DeleteCarHandler).Methods("DELETE")
 
-	fmt.Println("Servidor rodando na porta 8090")
-	http.ListenAndServe(":8090", router)
+	fmt.Println("Servidor rodando na porta 8080")
+	http.ListenAndServe(":8080", router)
 }
