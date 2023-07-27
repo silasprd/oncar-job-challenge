@@ -14,7 +14,7 @@ func NewCarService(db *gorm.DB) *CarService {
 	return &CarService{db: db}
 }
 
-func (s *CarService) AddCar(car model.Car) error {
+func (s *CarService) AddCar(car *model.Car) error {
 	return s.db.Create(&car).Error
 }
 

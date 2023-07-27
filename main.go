@@ -4,11 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"oncar-job-challenge/api/controller"
-	"oncar-job-challenge/api/service"
 	"oncar-job-challenge/db"
-
-	"github.com/gorilla/mux"
+	"oncar-job-challenge/routes"
 )
 
 func main() {
@@ -32,17 +29,7 @@ func main() {
 		return
 	}
 
-	carService := service.NewCarService(dbConn)
-
-	carController := controller.NewCarController(carService)
-
-	router := mux.NewRouter()
-
-	router.HandleFunc("/carros", carController.ListCarsHandler).Methods("GET")
-	router.HandleFunc("/carros", carController.AddCarHandler).Methods("POST")
-	router.HandleFunc("/carros/{id}", carController.GetCarHandler).Methods("GET")
-	router.HandleFunc("/carros/{id}", carController.DeleteCarHandler).Methods("DELETE")
-
+	router := routes.ConfigureRoutes(dbConn)
 	fmt.Println("Servidor rodando na porta 8080")
 	http.ListenAndServe(":8080", router)
 }
