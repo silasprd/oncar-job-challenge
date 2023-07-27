@@ -27,7 +27,7 @@ func (c *CarController) AddCarHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = c.carService.AddCar(&car)
+	err = c.carService.AddCar(car)
 	if err != nil {
 		http.Error(w, "Erro ao adicionar o carro", http.StatusInternalServerError)
 		return

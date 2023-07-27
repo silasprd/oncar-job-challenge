@@ -35,11 +35,11 @@ func TestCarService(t *testing.T) {
 		Year:  2006,
 	}
 
-	t.Run("TestAddCar", func(t *testing.T) { testAddCar(t, mock, *carService, &car) })
+	t.Run("TestAddCar", func(t *testing.T) { testAddCar(t, mock, *carService, car) })
 
 }
 
-func testAddCar(t *testing.T, mock sqlmock.Sqlmock, carService service.CarService, car *model.Car) {
+func testAddCar(t *testing.T, mock sqlmock.Sqlmock, carService service.CarService, car model.Car) {
 	// O que o teste espera
 	mock.ExpectBegin()
 	mock.ExpectExec("INSERT INTO `cars`").WithArgs(car.Brand, car.Model, car.Year, car.Price).WillReturnResult(sqlmock.NewResult(1, 1))
