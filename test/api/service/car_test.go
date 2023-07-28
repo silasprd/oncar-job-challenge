@@ -14,6 +14,7 @@ import (
 )
 
 func TestCarService(t *testing.T) {
+
 	// Configura o mock do banco de dados
 	db, mock, err := sqlmock.New()
 	assert.Nil(t, err)
@@ -29,11 +30,10 @@ func TestCarService(t *testing.T) {
 	// Instância do service de carro usando o gorm mockado
 	carService := service.NewCarService(gormDB)
 
-	// Objeto carro para teste AddCar
-	carToAdd := model.Car{
-		Brand: "Honda",
-		Model: "Civic",
-		Year:  2019,
+	// Lista de carros para teste
+	listCars := []model.Car{
+		{ID: 1, Brand: "Toyota", Model: "Corolla", Year: 2020},
+		{ID: 2, Brand: "Honda", Model: "Civic", Year: 2019},
 	}
 
 	//Objeto carro para teste Get
@@ -45,19 +45,31 @@ func TestCarService(t *testing.T) {
 		Price: 70000,
 	}
 
-	// Lista de carros para teste
-	validListCars := []model.Car{
-		{ID: 1, Brand: "Toyota", Model: "Corolla", Year: 2020},
-		{ID: 2, Brand: "Honda", Model: "Civic", Year: 2019},
+	// Objeto carro para teste AddCar
+	carToAdd := model.Car{
+		Brand: "Honda",
+		Model: "Civic",
+		Year:  2019,
+	}
+
+	// Carro para teste delete
+	carToDelete := model.Car{
+		ID:    1,
+		Brand: "Fiat",
+		Model: "Toro",
+		Year:  2017,
+		Price: 70000,
 	}
 
 	t.Run("TestAddCar", func(t *testing.T) { testAddCar(t, mock, *carService, carToAdd) })
-	t.Run("TestGetAllCars", func(t *testing.T) { testGetAllCars(t, mock, *carService, validListCars) })
+	t.Run("TestGetAllCars", func(t *testing.T) { testGetAllCars(t, mock, *carService, listCars) })
 	t.Run("TestGetCar", func(t *testing.T) { testGetCar(t, mock, *carService, car) })
+	t.Run("TestDeleteCar", func(t *testing.T) { testDeleteCar(t, mock, *carService, carToDelete) })
 
 }
 
 func testAddCar(t *testing.T, mock sqlmock.Sqlmock, carService service.CarService, car model.Car) {
+
 	// O que o teste espera
 	mock.ExpectBegin()
 	mock.ExpectExec("INSERT INTO `cars`").WithArgs(car.Brand, car.Model, car.Year, car.Price).WillReturnResult(sqlmock.NewResult(1, 1))
@@ -69,6 +81,7 @@ func testAddCar(t *testing.T, mock sqlmock.Sqlmock, carService service.CarServic
 
 	// Verificar se obteve o retorno esperado
 	assert.Nil(t, mock.ExpectationsWereMet())
+
 }
 
 func testGetAllCars(t *testing.T, mock sqlmock.Sqlmock, carService service.CarService, listCars []model.Car) {
@@ -97,6 +110,7 @@ func testGetAllCars(t *testing.T, mock sqlmock.Sqlmock, carService service.CarSe
 		assert.NotEmpty(t, car.Model, resultCars[i].Model)
 		assert.NotEmpty(t, car.Year, resultCars[i].Year)
 	}
+
 }
 
 func testGetCar(t *testing.T, mock sqlmock.Sqlmock, carService service.CarService, car model.Car) {
@@ -121,5 +135,25 @@ func testGetCar(t *testing.T, mock sqlmock.Sqlmock, carService service.CarServic
 	assert.Equal(t, car.Model, resultCar.Model)
 	assert.Equal(t, car.Year, resultCar.Year)
 	assert.Equal(t, car.Price, resultCar.Price)
+
+}
+
+func testDeleteCar(t *testing.T, mock sqlmock.Sqlmock, carService service.CarService, carToDelete model.Car) {
+
+	// Configura a query que o teste espera que seja executada ao chamar a função
+	query := "DELETE FROM `cars` WHERE `cars`.`id` = ?"
+	mock.ExpectBegin()
+	mock.ExpectExec(regexp.QuoteMeta(query)).WithArgs(carToDelete.ID).WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectCommit()
+
+	// Executa a função DeleteCar
+	err := carService.DeleteCar(carToDelete.ID)
+	assert.Nil(t, err)
+
+	// Verifica se a propriedade ID do carro existe
+	assert.NotEmpty(t, carToDelete.ID)
+
+	// Verifica se o retorno do mock está correto
+	assert.Nil(t, mock.ExpectationsWereMet())
 
 }
