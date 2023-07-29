@@ -77,10 +77,10 @@ func testAddCar(t *testing.T, mock sqlmock.Sqlmock, carService service.CarServic
 
 	// Executar o método AddCar
 	err := carService.AddCar(car)
-	assert.Nil(t, err)
+	assert.Nil(t, err, "Falha ao adicionar carro!")
 
 	// Verificar se obteve o retorno esperado
-	assert.Nil(t, mock.ExpectationsWereMet())
+	assert.Nil(t, mock.ExpectationsWereMet(), "Expectativas mockadas não foram atendidas.")
 
 }
 
@@ -95,20 +95,20 @@ func testGetAllCars(t *testing.T, mock sqlmock.Sqlmock, carService service.CarSe
 
 	// Executa o método GetAllCars
 	resultCars, err := carService.GetAllCars()
-	assert.Nil(t, err)
+	assert.Nil(t, err, "Falha ao obter a lista de carros!")
 
 	// Verifica se retornou o que o mock estava esperando
-	assert.Nil(t, mock.ExpectationsWereMet())
+	assert.Nil(t, mock.ExpectationsWereMet(), "Expectativas mockadas não foram atendidas.")
 
 	// Testa se uma das listas não estão vazias
-	assert.NotEmpty(t, listCars, resultCars)
+	assert.NotEmpty(t, listCars, resultCars, "Lista vazia!")
 
-	// Faz uma verificação campo a campo para valores que não podem ser nulos
+	// Faz uma verificação campo a campo para valores obrigatórios
 	for i, car := range listCars {
-		assert.NotEmpty(t, car.ID, resultCars[i].ID)
-		assert.NotEmpty(t, car.Brand, resultCars[i].Brand)
-		assert.NotEmpty(t, car.Model, resultCars[i].Model)
-		assert.NotEmpty(t, car.Year, resultCars[i].Year)
+		assert.NotEmpty(t, car.ID, resultCars[i].ID, "ID do carro é obrigatório.")
+		assert.NotEmpty(t, car.Brand, resultCars[i].Brand, "Marca do carro é obrigatória")
+		assert.NotEmpty(t, car.Model, resultCars[i].Model, "Modelo do carro é obrigatório")
+		assert.NotEmpty(t, car.Year, resultCars[i].Year, "Ano do carro é obrigatório")
 	}
 
 }
@@ -117,17 +117,17 @@ func testGetCar(t *testing.T, mock sqlmock.Sqlmock, carService service.CarServic
 
 	// Configura o que o teste espera da consulta a ser realizada
 	rows := sqlmock.NewRows([]string{"id", "brand", "model", "year", "price"}).
-		AddRow(1, "Toyota", "Corolla", 2020, 70000)
+		AddRow(car.ID, car.Brand, car.Model, car.Year, car.Price)
 
 	query := "SELECT * FROM `cars` WHERE `cars`.`id` = ? ORDER BY `cars`.`id` LIMIT 1"
 	mock.ExpectQuery(regexp.QuoteMeta(query)).WithArgs(car.ID).WillReturnRows(rows)
 
 	// Executa o método GetCarByID
 	resultCar, err := carService.GetCarByID(car.ID)
-	assert.Nil(t, err)
+	assert.Nil(t, err, "Não foi possível encontrar o carro!")
 
 	// Verifica se retornou o que o mock estava esperando
-	assert.Nil(t, mock.ExpectationsWereMet())
+	assert.Nil(t, mock.ExpectationsWereMet(), "Expectativas mockadas não foram atendidas.")
 
 	// Verifica se retornou o objeto corretamente
 	assert.Equal(t, car.ID, resultCar.ID)
@@ -148,12 +148,12 @@ func testDeleteCar(t *testing.T, mock sqlmock.Sqlmock, carService service.CarSer
 
 	// Executa a função DeleteCar
 	err := carService.DeleteCar(carToDelete.ID)
-	assert.Nil(t, err)
+	assert.Nil(t, err, "Não foi possível excluir o carro!")
 
 	// Verifica se a propriedade ID do carro existe
-	assert.NotEmpty(t, carToDelete.ID)
+	assert.NotEmpty(t, carToDelete.ID, "ID do carro não pode ser vazio!")
 
 	// Verifica se o retorno do mock está correto
-	assert.Nil(t, mock.ExpectationsWereMet())
+	assert.Nil(t, mock.ExpectationsWereMet(), "Expectativas mockadas não foram atendidas")
 
 }
