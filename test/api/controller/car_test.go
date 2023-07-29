@@ -32,7 +32,7 @@ func TestCarController(t *testing.T) {
 		Conn:                      db,
 		SkipInitializeWithVersion: true,
 	}), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
+		Logger: logger.Default.LogMode(logger.Silent),
 	})
 	assert.Nil(t, err)
 
@@ -66,9 +66,19 @@ func TestCarController(t *testing.T) {
 		Price: 70000,
 	}
 
+	// Modelo de carro válido para deleção
+	carToDelete := model.Car{
+		ID:    1,
+		Brand: "Toyota",
+		Model: "Corolla",
+		Year:  2022,
+		Price: 70000,
+	}
+
 	t.Run("TestAddCar", func(t *testing.T) { testAddCar(t, mockDB, *mockCarController, carToAdd) })
 	t.Run("TestGetAllCars", func(t *testing.T) { testGetAllCars(t, mockDB, *mockCarController, listCars) })
 	t.Run("TestGetCar", func(t *testing.T) { testGetCar(t, mockDB, mockCarController, car) })
+	t.Run("TestDeleteCar", func(t *testing.T) { testDeleteCar(t, mockDB, mockCarController, carToDelete) })
 
 }
 
@@ -159,9 +169,8 @@ func testGetCar(t *testing.T, mockDB sqlmock.Sqlmock, mockController *controller
 	rr := httptest.NewRecorder()
 
 	// Configura o banco de dados para a consulta
-	rows := sqlmock.NewRows([]string{"id", "brand", "model", "year", "price"})
-	rows.AddRow(car.ID, car.Brand, car.Model, car.Year, car.Price)
-
+	columns := []string{"id", "brand", "model", "year", "price"}
+	rows := sqlmock.NewRows(columns).AddRow(car.ID, car.Brand, car.Model, car.Year, car.Price)
 	query := "SELECT * FROM `cars` WHERE `cars`.`id` = ? ORDER BY `cars`.`id` LIMIT 1"
 	mockDB.ExpectQuery(regexp.QuoteMeta(query)).WithArgs(car.ID).WillReturnRows(rows)
 
@@ -169,20 +178,52 @@ func testGetCar(t *testing.T, mockDB sqlmock.Sqlmock, mockController *controller
 	router.ServeHTTP(rr, req)
 
 	// Verifica o status code da resposta (esperado: 200 OK)
-	assert.Equal(t, http.StatusOK, rr.Code, "Carro retornado incorretamente(Código do status diferente)")
+	assert.Equal(t, http.StatusOK, rr.Code, "Carro retornado incorretamente!")
 
 	// Verifica o conteúdo da resposta (esperado: carro serializado)
 	var responseCar model.Car
 	err = json.NewDecoder(rr.Body).Decode(&responseCar)
-	assert.Nil(t, err, "Erro ao decodificar a resposta JSON")
+	assert.Nil(t, err, "Erro ao decodificar a resposta JSON.")
 
 	// Verifica se o carro retornado não é nulo
-	assert.NotNil(t, responseCar, "Carro retornado é nulo")
+	assert.NotNil(t, responseCar, "Carro retornado é nulo.")
 
 	// Verifica o conteúdo do carro retornado
-	assert.Equal(t, car.ID, responseCar.ID, "ID do carro retornado incorreto")
+	assert.Equal(t, car.ID, responseCar.ID, "ID do carro retornado incorreto.")
 
-	// Verifica as expectativas do mock do serviço
+	// Verifica as expectativas do mockadas
+	assert.Nil(t, mockDB.ExpectationsWereMet(), "Expectativas mockadas não foram atendidas.")
+
+}
+
+func testDeleteCar(t *testing.T, mockDB sqlmock.Sqlmock, mockController *controller.CarController, carToDelete model.Car) {
+
+	router := mux.NewRouter()
+	router.HandleFunc("/api/cars/{id}", mockController.DeleteCarHandler).Methods("DELETE")
+	url := "/api/cars/" + strconv.Itoa(int(carToDelete.ID))
+	req, err := http.NewRequest("DELETE", url, nil)
+	if err != nil {
+		t.Fatalf("Erro ao criar a requisição HTTP: %v", err)
+	}
+
+	// Grava a resposta HTTP em um ResponseRecorder
+	rr := httptest.NewRecorder()
+
+	// Configura o banco de dados para a deleção do carro
+	query := "DELETE FROM `cars` WHERE `cars`.`id` = ?"
+	mockDB.ExpectBegin()
+	mockDB.ExpectExec(regexp.QuoteMeta(query)).WithArgs(carToDelete.ID).WillReturnResult(sqlmock.NewResult(1, 1))
+	mockDB.ExpectCommit()
+
+	router.ServeHTTP(rr, req)
+
+	// Verifica o retorno da função delete
+	assert.Equal(t, http.StatusOK, rr.Code, "Carro não foi deletado com sucesso!")
+
+	// Verifica se a propriedade ID do carro existe
+	assert.NotEmpty(t, carToDelete.ID, "ID do carro não pode ser vazio!")
+
+	// Verifica as expectativas do mockadas
 	assert.Nil(t, mockDB.ExpectationsWereMet(), "Expectativas mockadas não foram atendidas.")
 
 }
