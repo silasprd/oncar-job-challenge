@@ -9,9 +9,9 @@ import (
 	"strconv"
 	"testing"
 
-	"oncar-job-challenge/api/controller"
-	model "oncar-job-challenge/api/model"
-	"oncar-job-challenge/api/service"
+	"oncar-job-challenge/core/controller"
+	model "oncar-job-challenge/core/model"
+	"oncar-job-challenge/core/service"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/gorilla/mux"

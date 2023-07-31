@@ -1,0 +1,122 @@
+.container {
+    padding: 0;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.car-list {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    padding-inline-start: 0;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    padding: 14px;
+    background-color: rgb(86, 105, 247);
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    cursor: pointer;
+    border-width: 2px;
+    border-style: groove;
+    border-color: rgb(118, 118, 118);
+}
+
+.txt-price {
+    font-size: 26px;
+    font-weight: bold;
+    text-align: end;
+    color: #2E2667;
+}
+
+.txt-model {
+    font-size: 18px;
+    font-weight: 700;
+    color: #2E2667;
+}
+
+.txt-year {
+    font-size: 16px;
+    font-weight: 700;
+    color: #525267;
+    margin-bottom: 7px;
+}
+
+.txt-brand {
+    font-size: 22px;
+    font-weight: bolder;
+    /* color: #2E2667; */
+    color: #FFFFFF;
+}
+
+/* Estilos para o modal */
+.form {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px 70px 40px 70px;
+    border: 1px solid #888;
+    width: 60%;
+    border-radius: 16px;
+}
+
+.contact-form{
+    display: flex;
+    flex-direction: column;
+}
+
+.field{
+    display: flex;
+    flex-direction: column;
+    margin: 7px 0;
+}
+
+input{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 18px;
+    padding: 7px;
+    border-radius: 10px;
+}
+
+label{
+    font-weight: 600;
+}
+
+.submit-button{
+    margin-top: 14px;
+    padding: 10px;
+    width: 30%;
+    background-color: rgb(86, 105, 247);
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 10px;
+}
+
+.closed {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.closed:hover,
+.closed:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}

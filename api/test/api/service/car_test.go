@@ -4,8 +4,8 @@ import (
 	"regexp"
 	"testing"
 
-	model "oncar-job-challenge/api/model"
-	"oncar-job-challenge/api/service"
+	model "oncar-job-challenge/core/model"
+	"oncar-job-challenge/core/service"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"

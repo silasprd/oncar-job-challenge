@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
-	models "oncar-job-challenge/api/model"
-	"oncar-job-challenge/api/service"
+	models "oncar-job-challenge/core/model"
+	"oncar-job-challenge/core/service"
 
 	"github.com/gorilla/mux"
 )

@@ -1,7 +1,7 @@
 package model_test
 
 import (
-	model "oncar-job-challenge/api/model"
+	model "oncar-job-challenge/core/model"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
