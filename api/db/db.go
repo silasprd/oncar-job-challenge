@@ -2,7 +2,7 @@ package db
 
 import (
 	"fmt"
-	model "oncar-job-challenge/api/model"
+	model "oncar-job-challenge/core/model"
 
 	"os"
 
@@ -40,6 +40,11 @@ func OpenConnection(envPath string) (*gorm.DB, error) {
 func AutoMigrateTables(db *gorm.DB) error {
 
 	err := db.AutoMigrate(&model.Car{})
+	if err != nil {
+		return err
+	}
+
+	err = db.AutoMigrate(&model.Contact{})
 	if err != nil {
 		return err
 	}

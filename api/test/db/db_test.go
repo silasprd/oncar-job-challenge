@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm"
 
-	model "oncar-job-challenge/api/model"
+	model "oncar-job-challenge/core/model"
 	db "oncar-job-challenge/db"
 
 	_ "github.com/joho/godotenv/autoload"

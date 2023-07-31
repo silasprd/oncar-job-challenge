@@ -1,7 +1,7 @@
 package service
 
 import (
-	model "oncar-job-challenge/api/model"
+	model "oncar-job-challenge/core/model"
 
 	"gorm.io/gorm"
 )
@@ -20,13 +20,16 @@ func (s *CarService) AddCar(car model.Car) error {
 
 func (s *CarService) GetAllCars() ([]model.Car, error) {
 	var cars []model.Car
-	err := s.db.Find(&cars).Error
+	err := s.db.Preload("Contacts").Find(&cars).Error
+	if err != nil {
+		return nil, err
+	}
 	return cars, err
 }
 
 func (s *CarService) GetCarByID(id uint) (*model.Car, error) {
 	var car model.Car
-	err := s.db.First(&car, id).Error
+	err := s.db.Preload("Contacts").First(&car, id).Error
 	if err != nil {
 		return nil, err
 	}
