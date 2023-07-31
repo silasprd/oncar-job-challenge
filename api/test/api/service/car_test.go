@@ -13,6 +13,12 @@ import (
 	"gorm.io/gorm"
 )
 
+type GormDB interface {
+	Preload(column string, conditions ...interface{}) *gorm.DB
+	Find(dest interface{}, conds ...interface{}) *gorm.DB
+	Error() error
+}
+
 func TestCarService(t *testing.T) {
 
 	// Configura o mock do banco de dados
@@ -91,7 +97,12 @@ func testGetAllCars(t *testing.T, mock sqlmock.Sqlmock, carService service.CarSe
 	rows.AddRow(3, "Chevrolet", "Onix", 2014, 38000)
 	rows.AddRow(4, "Fiat", "Mobi", 2014, 31000)
 
-	mock.ExpectQuery("SELECT (.+) FROM `cars`").WillReturnRows(rows)
+	contacts := sqlmock.NewRows([]string{"id", "name", "email", "phone", "car_id"})
+	contacts.AddRow(1, "Silas", "silas.prado@gmail.com", "12998776655", 3)
+	contacts.AddRow(2, "Silas", "silas.prado@gmail.com", "12998776655", 4)
+
+	mock.ExpectQuery(regexp.QuoteMeta("SELECT * FROM `cars`")).WillReturnRows(rows)
+	mock.ExpectQuery(regexp.QuoteMeta("SELECT * FROM `contacts` WHERE `contacts`.`car_id` IN (?,?)")).WithArgs(3, 4).WillReturnRows(contacts)
 
 	// Executa o método GetAllCars
 	resultCars, err := carService.GetAllCars()
@@ -119,8 +130,13 @@ func testGetCar(t *testing.T, mock sqlmock.Sqlmock, carService service.CarServic
 	rows := sqlmock.NewRows([]string{"id", "brand", "model", "year", "price"}).
 		AddRow(car.ID, car.Brand, car.Model, car.Year, car.Price)
 
+	contacts := sqlmock.NewRows([]string{"id", "name", "email", "phone", "car_id"}).
+		AddRow(1, "Silas", "silas.prado@gmail.com", "12996523398", 1)
+
 	query := "SELECT * FROM `cars` WHERE `cars`.`id` = ? ORDER BY `cars`.`id` LIMIT 1"
 	mock.ExpectQuery(regexp.QuoteMeta(query)).WithArgs(car.ID).WillReturnRows(rows)
+
+	mock.ExpectQuery(regexp.QuoteMeta("SELECT * FROM `contacts` WHERE `contacts`.`car_id` = ?")).WithArgs(1).WillReturnRows(contacts)
 
 	// Executa o método GetCarByID
 	resultCar, err := carService.GetCarByID(car.ID)

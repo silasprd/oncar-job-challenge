@@ -52,9 +52,18 @@ func TestCarController(t *testing.T) {
 
 	// Modelo de lista de carros válida
 	listCars := []model.Car{
-		{ID: 1, Brand: "Toyota", Model: "Corolla", Year: 2022, Price: 70000},
-		{ID: 2, Brand: "Honda", Model: "Civic", Year: 2019, Price: 90000},
-		{ID: 3, Brand: "Chevrolet", Model: "Onix", Year: 2013, Price: 35000},
+		{
+			ID: 1, Brand: "Toyota", Model: "Corolla", Year: 2022, Price: 70000,
+			Contacts: []model.Contact{
+				{ID: 1, Name: "Silas", Email: "silas.prado@gmail.com", Phone: "12996558877", CarID: 1},
+			},
+		},
+		{
+			ID: 2, Brand: "Honda", Model: "Civic", Year: 2019, Price: 90000,
+			Contacts: []model.Contact{
+				{ID: 2, Name: "Silas", Email: "silas.prado@gmail.com", Phone: "12996558877", CarID: 2},
+			},
+		},
 	}
 
 	// Modelo de carro válido para consulta
@@ -64,6 +73,15 @@ func TestCarController(t *testing.T) {
 		Model: "Corolla",
 		Year:  2022,
 		Price: 70000,
+		Contacts: []model.Contact{
+			{
+				ID:    1,
+				Name:  "Silas",
+				Email: "silas.prado@gmail.com",
+				Phone: "12996887766",
+				CarID: 1,
+			},
+		},
 	}
 
 	// Modelo de carro válido para deleção
@@ -131,8 +149,13 @@ func testGetAllCars(t *testing.T, mockDB sqlmock.Sqlmock, mockController control
 		rows.AddRow(car.ID, car.Brand, car.Model, car.Year, car.Price)
 	}
 
+	contacts := sqlmock.NewRows([]string{"id", "name", "email", "phone", "car_id"})
+	contacts.AddRow(1, "Silas", "silas.prado@gmail.com", "12996558877", 1)
+	contacts.AddRow(2, "Silas", "silas.prado@gmail.com", "12996558877", 2)
+
 	// O que o teste espera que aconteça
 	mockDB.ExpectQuery(regexp.QuoteMeta("SELECT * FROM `cars`")).WillReturnRows(rows)
+	mockDB.ExpectQuery(regexp.QuoteMeta("SELECT * FROM `contacts` WHERE `contacts`.`car_id` IN (?,?)")).WithArgs(1, 2).WillReturnRows(contacts)
 
 	rr = httptest.NewRecorder()
 
@@ -169,10 +192,14 @@ func testGetCar(t *testing.T, mockDB sqlmock.Sqlmock, mockController *controller
 	rr := httptest.NewRecorder()
 
 	// Configura o banco de dados para a consulta
-	columns := []string{"id", "brand", "model", "year", "price"}
-	rows := sqlmock.NewRows(columns).AddRow(car.ID, car.Brand, car.Model, car.Year, car.Price)
-	query := "SELECT * FROM `cars` WHERE `cars`.`id` = ? ORDER BY `cars`.`id` LIMIT 1"
-	mockDB.ExpectQuery(regexp.QuoteMeta(query)).WithArgs(car.ID).WillReturnRows(rows)
+	rows := sqlmock.NewRows([]string{"id", "brand", "model", "year", "price"}).
+		AddRow(car.ID, car.Brand, car.Model, car.Year, car.Price)
+
+	contacts := sqlmock.NewRows([]string{"id", "name", "email", "phone", "car_id"}).
+		AddRow(1, "Silas", "silas.prado@gmail.com", "12996887766", 1)
+
+	mockDB.ExpectQuery(regexp.QuoteMeta("SELECT * FROM `cars` WHERE `cars`.`id` = ? ORDER BY `cars`.`id` LIMIT 1")).WithArgs(car.ID).WillReturnRows(rows)
+	mockDB.ExpectQuery(regexp.QuoteMeta("SELECT * FROM `contacts` WHERE `contacts`.`car_id` = ?")).WithArgs(car.ID).WillReturnRows(contacts)
 
 	// Chama a função configurada no router
 	router.ServeHTTP(rr, req)
