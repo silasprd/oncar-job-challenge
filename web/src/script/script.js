@@ -37,7 +37,6 @@ async function fetchAndRenderCars() {
 
       listItem.addEventListener("click", function (event) {
         selectedCarId = car.ID
-        console.log(car)
         if (selectedCarId !== null) {
           getCarIdAndOpenModal(selectedCarId);
         }
@@ -79,7 +78,6 @@ function sendContact() {
       },
       body: JSON.stringify(contact)
   }).then(async (response) => {
-    console.log(response)
     if(response.status === 201){
       window.alert("Dados de contato enviados com sucesso!");
       closeModal();
