@@ -12,7 +12,7 @@
     <div class="container">
         <div class="bar">
             <div class="title">
-                <h1>onCar Jon Challenge</h1>
+                <h1 class="nav-title">onCar Job Challenge</h1>
             </div>
             <div class="add-car">
                 <button class="add-car-button">Adicionar Carro</button>
@@ -26,19 +26,23 @@
     <div id="form-contact" class="form-contact">
         <div class="form-content">
             <span class="closed">&times;</span>
-            <h2>Preencha suas informações de Contato</h2>
+            <div class="get-car-container">
+                <span id="get-car"></span>
+                <span id="get-car-price"></span>  
+            </div>
+            <h2 class="form-title">Preencha suas informações de Contato</h2>
             <form id="contact-form" class="contact-form">
                 <div class="field">
                     <label for="name">Nome:</label>
-                    <input type="text" id="name" name="name" required>
+                    <input type="text" id="name" name="name" placeholder="Informe seu nome" required>
                 </div>
                 <div class="field">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" placeholder="example@gmail.com" required>
                 </div>
                 <div class="field">
                     <label for="phone">Telefone:</label>
-                    <input type="text" id="phone" name="phone" required>
+                    <input type="tel" id="phone" name="phone" placeholder="Ex.: 12996000000">
                 </div>
                 <button type="submit" class="submit-button">Enviar</button>
             </form>
@@ -48,7 +52,7 @@
     <div id="form-car" class="form-car">
         <div class="form-content">
             <span class="closed-car">&times;</span>
-            <h2>Preencha as informações do carro</h2>
+            <h2 class="form-title">Preencha as informações do carro</h2>
             <form id="contact-form" class="contact-form">
                 <div class="field">
                     <label for="brand">Marca:</label>
@@ -66,7 +70,7 @@
                     <label for="price">Preço:</label>
                     <input type="text" id="price" name="price" required>
                 </div>
-                <button type="submit" class="submit-button">Enviar</button>
+                <button type="submit" class="submit-button" id="submit-car-button">Enviar</button>
             </form>
         </div>
     </div>

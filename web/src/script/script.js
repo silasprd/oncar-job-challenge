@@ -1,11 +1,11 @@
 let selectedCarId = null;
 
-let apiUrl = 'http://localhost:8080/cars'
+let apiUrl = 'http://localhost:8080'
 let webUrl = 'http://localhost:3000/'
 
 async function fetchAndRenderCars() {
   try {
-    const response = await fetch(apiUrl);
+    const response = await fetch(`${apiUrl}/cars`);
     const data = await response.json();
     console.log(data)
     const carList = document.getElementById('carList');
@@ -56,7 +56,42 @@ async function fetchAndRenderCars() {
   }
 }
 
-function sendContact() {
+function addCar() {
+  const brandInput = document.getElementById("brand");
+  const modelInput = document.getElementById("model");
+  const yearInput = document.getElementById("year");
+  const priceInput = document.getElementById("price");
+
+  const car = {
+    brand: brandInput.value,
+    model: modelInput.value,
+    year: parseInt(yearInput.value),
+    price: parseInt(priceInput.value),
+  }
+
+  console.log(car)
+
+  fetch(`${apiUrl}/cars`, {
+    method: 'POST',
+    header: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(car)
+  }).then((response) => {
+    if(response.status === 201){
+      window.alert("Carro criado co sucesso!")
+    } else if(!response.ok){
+      console.log("Erro na requisição")
+    } else {
+      return response.json()
+    }
+  })
+}
+
+function addContact(event) {
+
+  event.preventDefault()
+
   const nameInput = document.getElementById("name");
   const emailInput = document.getElementById("email");
   const phoneInput = document.getElementById("phone");
@@ -71,13 +106,13 @@ function sendContact() {
   }
 
   // Fazer requisição para API
-  fetch('http://localhost:8080/contacts', {
+  fetch(`${apiUrl}/contacts`, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json'
       },
       body: JSON.stringify(contact)
-  }).then(async (response) => {
+  }).then((response) => {
     if(response.status === 201){
       window.alert("Dados de contato enviados com sucesso!");
       closeModalContact();
@@ -90,9 +125,28 @@ function sendContact() {
 
 }
 
+async function getCarById(){
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const carIdParam = urlParams.get("carId");
+    const response = await fetch(`${apiUrl}/cars/${carIdParam}`)
+    const data = await response.json()
+
+    var getCar = document.getElementById("get-car")
+    getCar.innerText = `${data.Brand} ${data.Model} ${data.Year}`
+
+    var getPriceField = document.getElementById("get-car-price")
+    getPriceField.innerText = `R$ ${data.Price}`
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 function openModalContact() {
   var modal = document.getElementById("form-contact");
   modal.style.display = "block";
+  getCarById()
 }
 
 function openModalCar() {
@@ -119,17 +173,11 @@ function getCarIdAndOpenModal(carId) {
 
 document.addEventListener("DOMContentLoaded", fetchAndRenderCars);
 
-// Lidar com o evento de "popstate" para manter o modal aberto quando a URL é alterada
-window.addEventListener("popstate", function (event) {
-  if (event.state && event.state.modalOpen) {
-    openModal();
-  } else {
-    closeModal();
-  }
-});
-
 var submitButton = document.querySelector(".submit-button")
-submitButton.addEventListener("click", sendContact)
+submitButton.addEventListener("click", addContact)
+
+var submitCarButton = document.getElementById("submit-car-button")
+submitCarButton.addEventListener("click", addCar)
 
 var closeButton = document.querySelector(".closed");
 closeButton.addEventListener("click", function () {
@@ -143,8 +191,6 @@ closeCar.addEventListener("click", function () {
   if(modal.style.display == "block"){
     modal.style.display = "none";
   }
-
-  console.log("asdajsdalksdj")
 });
 
 var addCarButton = document.querySelector(".add-car-button")
@@ -152,3 +198,4 @@ addCarButton.addEventListener("click", function () {
   var formCar = document.getElementById("form-car")
   formCar.style.display = "block"
 })
+
