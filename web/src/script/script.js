@@ -50,7 +50,7 @@ async function fetchAndRenderCars() {
       listItem.appendChild(txtPrice)
     });
     var closeButton = document.querySelector(".closed");
-    closeButton.addEventListener("click", closeModal);
+    closeButton.addEventListener("click", closeModalContact);
   } catch (error) {
     console.error('Erro ao buscar e renderizar a lista de carros:', error);
   }
@@ -80,7 +80,7 @@ function sendContact() {
   }).then(async (response) => {
     if(response.status === 201){
       window.alert("Dados de contato enviados com sucesso!");
-      closeModal();
+      closeModalContact();
     } else if (!response.ok) {
       console.log('Erro na requisição');
     } else {
@@ -90,27 +90,33 @@ function sendContact() {
 
 }
 
-// Função para abrir o modal
-function openModal() {
-  var modal = document.getElementById("form");
+function openModalContact() {
+  var modal = document.getElementById("form-contact");
   modal.style.display = "block";
 }
 
-// Função para fechar o modal
-function closeModal() {
-  var modal = document.getElementById("form");
+function openModalCar() {
+  var modal = document.getElementById("form-car");
+  modal.style.display = "block";
+}
+
+function closeModalContact() {
+  var modal = document.getElementById("form-contact");
   modal.style.display = "none";
   history.pushState({}, "", webUrl);
 }
 
-// Função para alterar a URL, abrir o modal
+function closeModalCar() {
+  var modal = document.getElementById("form-car");
+  modal.style.display = "none";
+}
+
 function getCarIdAndOpenModal(carId) {
   const url = `${webUrl}?carId=${carId}`;
   history.pushState({}, "", url);
-  openModal();
+  openModalContact();
 }
 
-// Chamar a função fetchAndRenderCars() quando o conteúdo da página for carregado
 document.addEventListener("DOMContentLoaded", fetchAndRenderCars);
 
 // Lidar com o evento de "popstate" para manter o modal aberto quando a URL é alterada
@@ -122,13 +128,27 @@ window.addEventListener("popstate", function (event) {
   }
 });
 
-// Enviar dados de contato
 var submitButton = document.querySelector(".submit-button")
 submitButton.addEventListener("click", sendContact)
 
-// Fechar o modal
 var closeButton = document.querySelector(".closed");
 closeButton.addEventListener("click", function () {
   history.pushState({}, "");
-  closeModal();
+  closeModalContact();
 });
+
+var closeCar = document.querySelector(".closed-car");
+closeCar.addEventListener("click", function () {
+  var modal = document.getElementById("form-car");
+  if(modal.style.display == "block"){
+    modal.style.display = "none";
+  }
+
+  console.log("asdajsdalksdj")
+});
+
+var addCarButton = document.querySelector(".add-car-button")
+addCarButton.addEventListener("click", function () {
+  var formCar = document.getElementById("form-car")
+  formCar.style.display = "block"
+})

@@ -1,47 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OnCar Job Challenge</title>
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
+
 <body>
     <div class="container">
-        <h1 class="">Lista de Carros</h1>
+        <div class="bar">
+            <div class="title">
+                <h1>onCar Jon Challenge</h1>
+            </div>
+            <div class="add-car">
+                <button class="add-car-button">Adicionar Carro</button>
+            </div>
+        </div>
         <ul id="carList" class="car-list">
-          <!-- A lista de carros será preenchida dinamicamente pelo JavaScript -->
+
         </ul>
     </div>
 
-    <div id="form" class="form">
+    <div id="form-contact" class="form-contact">
         <div class="form-content">
-          <span class="closed">&times;</span>
-          <h2>Preencha suas informações de Contato</h2>
-          <form id="contact-form" class="contact-form">
-            <!-- Seus campos de formulário aqui -->
-            <div class="field">
-                <label for="name">Nome:</label>
-                <input type="text" id="name" name="name" required>
-            </div>
-            <div class="field">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div class="field">
-                <label for="phone">Telefone:</label>
-                <input type="text" id="phone" name="phone" required>
-            </div>
-            <!-- Outros campos do formulário -->
-            <button type="submit" class="submit-button">Enviar</button>
-          </form>
+            <span class="closed">&times;</span>
+            <h2>Preencha suas informações de Contato</h2>
+            <form id="contact-form" class="contact-form">
+                <div class="field">
+                    <label for="name">Nome:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="field">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="field">
+                    <label for="phone">Telefone:</label>
+                    <input type="text" id="phone" name="phone" required>
+                </div>
+                <button type="submit" class="submit-button">Enviar</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="form-car" class="form-car">
+        <div class="form-content">
+            <span class="closed-car">&times;</span>
+            <h2>Preencha as informações do carro</h2>
+            <form id="contact-form" class="contact-form">
+                <div class="field">
+                    <label for="brand">Marca:</label>
+                    <input type="text" id="brand" name="brand" required>
+                </div>
+                <div class="field">
+                    <label for="model">Modelo:</label>
+                    <input type="text" id="model" name="model" required>
+                </div>
+                <div class="field">
+                    <label for="year">Ano:</label>
+                    <input type="text" id="year" name="year" required>
+                </div>
+                <div class="field">
+                    <label for="price">Preço:</label>
+                    <input type="text" id="price" name="price" required>
+                </div>
+                <button type="submit" class="submit-button">Enviar</button>
+            </form>
         </div>
     </div>
 
     <script src="/static/script/script.js">
 
-        
+
     </script>
 </body>
-</html>
 
+</html>
