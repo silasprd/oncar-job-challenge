@@ -37,7 +37,21 @@ func (s *CarService) GetCarByID(id uint) (*model.Car, error) {
 }
 
 func (s *CarService) DeleteCar(id uint) error {
+
 	var car model.Car
+	var contacts []model.Contact
+
+	err := s.db.Model(&model.Contact{}).Where("car_id", id).UpdateColumn("car_id", nil).Error
+	if err != nil {
+		return err
+	}
+
+	for _, contact := range contacts {
+		if err := s.db.Delete(&contact).Error; err != nil {
+			return err
+		}
+	}
+
 	result := s.db.Delete(&car, id)
 	if result.Error != nil {
 		return result.Error

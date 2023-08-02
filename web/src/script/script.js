@@ -33,9 +33,14 @@ async function fetchAndRenderCars() {
       txtPrice.classList.add("txt-price")
       txtPrice.innerText = `R$ ${car.Price}`
 
+      const deleteButton = document.createElement('button')
+      deleteButton.classList.add("delete-button")
+      deleteButton.innerText = 'X'
+
       listItem.id = "card"
 
       listItem.addEventListener("click", function (event) {
+        if(event.target == deleteButton) return
         selectedCarId = car.ID
         if (selectedCarId !== null) {
           getCarIdAndOpenModal(selectedCarId);
@@ -48,6 +53,8 @@ async function fetchAndRenderCars() {
       listItem.appendChild(txtModel)
       listItem.appendChild(txtYear)
       listItem.appendChild(txtPrice)
+      listItem.appendChild(deleteButton)
+      deleteButton.addEventListener("click", (event) => deleteCar(event, car.ID))
     });
     var closeButton = document.querySelector(".closed");
     closeButton.addEventListener("click", closeModalContact);
@@ -56,17 +63,25 @@ async function fetchAndRenderCars() {
   }
 }
 
-function addCar() {
+function addCar(event) {
+
+  event.preventDefault()
+
   const brandInput = document.getElementById("brand");
   const modelInput = document.getElementById("model");
   const yearInput = document.getElementById("year");
   const priceInput = document.getElementById("price");
 
+  const priceString = priceInput.value.substring(3)
+  const priceStringWithoutComma= priceString.substring(0, priceString.length - 3)
+  const parseStringWithoutPoint =  priceStringWithoutComma.replace(/[^\d]/g, '')
+  const priceFloat = parseFloat(parseStringWithoutPoint)
+
   const car = {
     brand: brandInput.value,
     model: modelInput.value,
     year: parseInt(yearInput.value),
-    price: parseInt(priceInput.value),
+    price: priceFloat,
   }
 
   console.log(car)
@@ -80,12 +95,14 @@ function addCar() {
   }).then((response) => {
     if(response.status === 201){
       window.alert("Carro criado co sucesso!")
+      closeModalCar();
     } else if(!response.ok){
       console.log("Erro na requisição")
     } else {
       return response.json()
     }
   })
+
 }
 
 function addContact(event) {
@@ -125,6 +142,16 @@ function addContact(event) {
 
 }
 
+function deleteCar(event, carId){
+  fetch(`${apiUrl}/cars/${carId}`, {method: 'DELETE'}).
+  then((response) => {
+    if(response.status === 200){
+      window.alert("Carro deletado com sucesso!")
+      console.log(response.status)
+    }
+  })  
+}
+
 async function getCarById(){
   try {
     const urlParams = new URLSearchParams(window.location.search);
@@ -143,15 +170,85 @@ async function getCarById(){
   }
 }
 
+function formValidate(inputField, submitButton) {
+  var count = 0
+  for(let index = 0; index < inputField.length; index++){
+    if(inputField[index].value === ""){
+      count++
+    }    
+  }
+  if(count == 0) {
+    submitButton.disabled = false
+  } else {
+    submitButton.disabled = true
+  }
+}
+
+function applyMask(input, mask){
+  const maskOptions = {
+    mask: mask
+  }
+  const masked = IMask(input, maskOptions)
+
+  return masked
+}
+
 function openModalContact() {
   var modal = document.getElementById("form-contact");
   modal.style.display = "block";
   getCarById()
+  var nameInput = document.getElementById("name")
+  var emailInput = document.getElementById("email")
+  var phoneInput = document.getElementById("phone")
+  applyMask(phoneInput, '(00) 0 0000-0000')
+
+  inputFields = [nameInput, emailInput, phoneInput]
+
+  var submitButton = document.querySelector(".submit-button")
+  submitButton.disabled = true
+
+  for(var index = 0; index < inputFields.length; index++){
+    inputFields[index].addEventListener("input", () => {formValidate(inputFields, submitButton)})
+  }
 }
 
 function openModalCar() {
   var modal = document.getElementById("form-car");
   modal.style.display = "block";
+
+  var brandInput = document.getElementById("brand")
+  var modelInput = document.getElementById("model")
+  var yearInput = document.getElementById("year")
+
+  var priceInput = document.getElementById("price")
+  applyMask(priceInput, [
+    { mask: '' },
+    {
+      mask: 'R$ num',
+      lazy: false,
+      blocks: {
+        num: {
+          mask: Number,
+          scale: 2,
+          thousandsSeparator: '.',
+          padFractionalZeros: true,
+          radix: ',',
+          mapToRadix: ['.'],
+        }
+      }
+    }
+  ])
+
+  inputFields = [brandInput, modelInput, yearInput]
+
+  var submitButton = document.getElementById("submit-car-button")
+  submitButton.disabled = true
+
+  console.log("asjdahkjh")
+
+  for(var index = 0; index < inputFields.length; index++){
+    inputFields[index].addEventListener("input", () => {formValidate(inputFields, submitButton)})
+  }
 }
 
 function closeModalContact() {
@@ -163,6 +260,7 @@ function closeModalContact() {
 function closeModalCar() {
   var modal = document.getElementById("form-car");
   modal.style.display = "none";
+  history.pushState({}, "", webUrl);
 }
 
 function getCarIdAndOpenModal(carId) {
@@ -195,7 +293,5 @@ closeCar.addEventListener("click", function () {
 
 var addCarButton = document.querySelector(".add-car-button")
 addCarButton.addEventListener("click", function () {
-  var formCar = document.getElementById("form-car")
-  formCar.style.display = "block"
-})
-
+  openModalCar()
+});

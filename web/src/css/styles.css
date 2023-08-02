@@ -45,6 +45,7 @@
 .card {
     display: flex;
     flex-direction: column;
+    position: relative;
     margin: 10px;
     padding: 14px;
     background-color: rgb(86, 105, 247);
@@ -86,6 +87,20 @@
     font-weight: bolder;
     /* color: #2E2667; */
     color: #FFFFFF;
+}
+
+.delete-button {
+    position: absolute;
+    align-self: flex-end;
+    background-color: red;
+    color: #FFFFFF;
+    font-weight: 800;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.delete-button:hover{
+    color: gold;
 }
 
 /* Estilos para o modal */
@@ -184,6 +199,10 @@ label{
     font-size: 18px;
     font-weight: 700;
     border-radius: 10px;
+}
+
+.submit-button:disabled{
+    background-color: #aaa;
 }
 
 .closed, .closed-car {
