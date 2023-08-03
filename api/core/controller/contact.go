@@ -30,7 +30,7 @@ func (c *ContactController) AddContactHandler(w http.ResponseWriter, r *http.Req
 
 	err = c.contactService.AddContact(contact)
 	if err != nil {
-		http.Error(w, "Erro ao associar o contato ao carro", http.StatusInternalServerError)
+		http.Error(w, "Erro ao adicionar o contato", http.StatusInternalServerError)
 		return
 	}
 
@@ -58,6 +58,7 @@ func (c *ContactController) ListContactsHandler(w http.ResponseWriter, r *http.R
 }
 
 func (c *ContactController) GetContactHandler(w http.ResponseWriter, r *http.Request) {
+
 	vars := mux.Vars(r)
 	idStr := vars["id"]
 
@@ -81,4 +82,5 @@ func (c *ContactController) GetContactHandler(w http.ResponseWriter, r *http.Req
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(contactJSON)
+
 }

@@ -26,26 +26,42 @@
     <div id="form-contact" class="form-contact">
         <div class="form-content">
             <span class="closed">&times;</span>
-            <div class="get-car-container">
-                <span id="get-car"></span>
-                <span id="get-car-price"></span>  
+            <div class="content">
+                <div class="get-car-container">
+                    <span id="get-car"></span>
+                    <span id="get-car-price"></span>  
+                </div>
+                <h2 class="form-title">Preencha suas informações de Contato</h2>
+                <form id="contact-form" class="contact-form">
+                    <div class="field">
+                        <label for="name">Nome:</label>
+                        <input type="text" id="name" name="name" placeholder="Informe seu nome" required>
+                    </div>
+                    <div class="field">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" placeholder="example@gmail.com" required>
+                    </div>
+                    <div class="field">
+                        <label for="phone">Telefone:</label>
+                        <input type="tel" id="phone" name="phone" placeholder="Ex.: 12996000000">
+                    </div>
+                    <div class="form-bottom">
+                        <button type="submit" class="submit-button" id="submit-button">Enviar</button>
+                        <span class="span-contacts">Ver contatos</span>
+                    </div>
+                </form>
             </div>
-            <h2 class="form-title">Preencha suas informações de Contato</h2>
-            <form id="contact-form" class="contact-form">
-                <div class="field">
-                    <label for="name">Nome:</label>
-                    <input type="text" id="name" name="name" placeholder="Informe seu nome" required>
+            <div id="car-contacts" class="car-contacts">
+                <div class="form-title">
+                    <h2>Contatos interessados</h2>
                 </div>
-                <div class="field">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" placeholder="example@gmail.com" required>
+                <ul id="contact-list" class="contact-list">
+
+                </ul>
+                <div class="back-button">
+                    <span>Voltar</span>
                 </div>
-                <div class="field">
-                    <label for="phone">Telefone:</label>
-                    <input type="tel" id="phone" name="phone" placeholder="Ex.: 12996000000">
-                </div>
-                <button type="submit" class="submit-button">Enviar</button>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -53,7 +69,7 @@
         <div class="form-content">
             <span class="closed-car">&times;</span>
             <h2 class="form-title">Preencha as informações do carro</h2>
-            <form id="contact-form" class="contact-form">
+            <form id="car-form" class="car-form">
                 <div class="field">
                     <label for="brand">Marca:</label>
                     <input type="text" id="brand" name="brand" required>
@@ -70,10 +86,11 @@
                     <label for="price">Preço:</label>
                     <input type="text" id="price" name="price" required>
                 </div>
-                <button type="submit" class="submit-button" id="submit-car-button">Enviar</button>
+                <button type="submit" class="submit-button" id="submit-car-button">Salvar</button>
             </form>
         </div>
     </div>
+
 
     <script src="https://unpkg.com/imask"></script>
     <script src="/static/script/script.js">

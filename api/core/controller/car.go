@@ -20,6 +20,7 @@ func NewCarController(carService *service.CarService) *CarController {
 }
 
 func (c *CarController) AddCarHandler(w http.ResponseWriter, r *http.Request) {
+
 	var car models.Car
 	err := json.NewDecoder(r.Body).Decode(&car)
 	if err != nil {
@@ -34,9 +35,11 @@ func (c *CarController) AddCarHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
+
 }
 
 func (c *CarController) ListCarsHandler(w http.ResponseWriter, r *http.Request) {
+
 	cars, err := c.carService.GetAllCars()
 	if err != nil {
 		http.Error(w, "Erro ao obter a lista de carros", http.StatusInternalServerError)
@@ -51,9 +54,11 @@ func (c *CarController) ListCarsHandler(w http.ResponseWriter, r *http.Request) 
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(carJSON)
+
 }
 
 func (c *CarController) GetCarHandler(w http.ResponseWriter, r *http.Request) {
+
 	vars := mux.Vars(r)
 	idStr := vars["id"]
 
@@ -77,9 +82,11 @@ func (c *CarController) GetCarHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(carJSON)
+
 }
 
 func (c *CarController) DeleteCarHandler(w http.ResponseWriter, r *http.Request) {
+
 	vars := mux.Vars(r)
 	idStr := vars["id"]
 
@@ -95,4 +102,5 @@ func (c *CarController) DeleteCarHandler(w http.ResponseWriter, r *http.Request)
 	}
 
 	w.WriteHeader(http.StatusOK)
+
 }

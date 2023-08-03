@@ -1,47 +1,46 @@
 let selectedCarId = null;
 
-let apiUrl = 'http://localhost:8080'
-let webUrl = 'http://localhost:3000/'
+let apiUrl = "http://localhost:8080";
+let webUrl = "http://localhost:3000/";
 
 async function fetchAndRenderCars() {
   try {
     const response = await fetch(`${apiUrl}/cars`);
     const data = await response.json();
-    console.log(data)
-    const carList = document.getElementById('carList');
+    const carList = document.getElementById("carList");
 
-    data.forEach(car => {
-      const listItem = document.createElement('li')
+    data.forEach((car) => {
+      const listItem = document.createElement("li");
       listItem.classList.add("card");
 
       // Armazena o ID do carro no elemento .card como um atributo personalizado
       listItem.setAttribute("data-car-id", car.ID);
 
-      const txtBrand = document.createElement('span')
-      txtBrand.classList.add("txt-brand")
-      txtBrand.innerText = `${car.Brand}`
+      const txtBrand = document.createElement("span");
+      txtBrand.classList.add("txt-brand");
+      txtBrand.innerText = `${car.Brand}`;
 
-      const txtModel = document.createElement('span')
-      txtModel.classList.add("txt-model")
-      txtModel.innerText = `Modelo: ${car.Model}`
+      const txtModel = document.createElement("span");
+      txtModel.classList.add("txt-model");
+      txtModel.innerText = `Modelo: ${car.Model}`;
 
-      const txtYear = document.createElement('span')
-      txtYear.classList.add("txt-year")
-      txtYear.innerText = `Ano: ${car.Year}`
+      const txtYear = document.createElement("span");
+      txtYear.classList.add("txt-year");
+      txtYear.innerText = `Ano: ${car.Year}`;
 
-      const txtPrice = document.createElement('span')
-      txtPrice.classList.add("txt-price")
-      txtPrice.innerText = `R$ ${car.Price}`
+      const txtPrice = document.createElement("span");
+      txtPrice.classList.add("txt-price");
+      txtPrice.innerText = `R$ ${car.Price}`;
 
-      const deleteButton = document.createElement('button')
-      deleteButton.classList.add("delete-button")
-      deleteButton.innerText = 'X'
+      const deleteButton = document.createElement("button");
+      deleteButton.classList.add("delete-button");
+      deleteButton.innerText = "X";
 
-      listItem.id = "card"
+      listItem.id = "card";
 
       listItem.addEventListener("click", function (event) {
-        if(event.target == deleteButton) return
-        selectedCarId = car.ID
+        if (event.target == deleteButton) return;
+        selectedCarId = car.ID;
         if (selectedCarId !== null) {
           getCarIdAndOpenModal(selectedCarId);
         }
@@ -49,65 +48,65 @@ async function fetchAndRenderCars() {
       });
 
       carList.appendChild(listItem);
-      listItem.appendChild(txtBrand)
-      listItem.appendChild(txtModel)
-      listItem.appendChild(txtYear)
-      listItem.appendChild(txtPrice)
-      listItem.appendChild(deleteButton)
-      deleteButton.addEventListener("click", (event) => deleteCar(event, car.ID))
+      listItem.appendChild(txtBrand);
+      listItem.appendChild(txtModel);
+      listItem.appendChild(txtYear);
+      listItem.appendChild(txtPrice);
+      listItem.appendChild(deleteButton);
+      deleteButton.addEventListener("click", (event) =>
+        deleteCar(event, car.ID)
+      );
     });
     var closeButton = document.querySelector(".closed");
     closeButton.addEventListener("click", closeModalContact);
   } catch (error) {
-    console.error('Erro ao buscar e renderizar a lista de carros:', error);
+    console.error("Erro ao buscar e renderizar a lista de carros:", error);
   }
 }
 
 function addCar(event) {
-
-  event.preventDefault()
+  event.preventDefault();
 
   const brandInput = document.getElementById("brand");
   const modelInput = document.getElementById("model");
   const yearInput = document.getElementById("year");
   const priceInput = document.getElementById("price");
 
-  const priceString = priceInput.value.substring(3)
-  const priceStringWithoutComma= priceString.substring(0, priceString.length - 3)
-  const parseStringWithoutPoint =  priceStringWithoutComma.replace(/[^\d]/g, '')
-  const priceFloat = parseFloat(parseStringWithoutPoint)
+  const priceString = priceInput.value.substring(3);
+  const parseStringWithoutPoint = priceString.replace(/[^\d]/g, "");
+  const priceFloat = parseFloat(parseStringWithoutPoint);
 
   const car = {
     brand: brandInput.value,
     model: modelInput.value,
     year: parseInt(yearInput.value),
     price: priceFloat,
-  }
+  };
 
-  console.log(car)
+  console.log(car);
 
   fetch(`${apiUrl}/cars`, {
-    method: 'POST',
+    method: "POST",
     header: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(car)
-  }).then((response) => {
-    if(response.status === 201){
-      window.alert("Carro criado co sucesso!")
-      closeModalCar();
-    } else if(!response.ok){
-      console.log("Erro na requisição")
-    } else {
-      return response.json()
-    }
+    body: JSON.stringify(car),
   })
-
+    .then((response) => {
+      if (response.status === 201) {
+        window.alert("Carro criado com sucesso!");
+        closeModalCar();
+      } else {
+        throw new Error(response.status);
+      }
+    })
+    .finally(() => {
+      window.location.reload();
+    });
 }
 
 function addContact(event) {
-
-  event.preventDefault()
+  event.preventDefault();
 
   const nameInput = document.getElementById("name");
   const emailInput = document.getElementById("email");
@@ -119,96 +118,135 @@ function addContact(event) {
     name: nameInput.value,
     email: emailInput.value,
     phone: phoneInput.value,
-    carId: parseInt(carIdParam)
-  }
+    carId: parseInt(carIdParam),
+  };
 
   // Fazer requisição para API
   fetch(`${apiUrl}/contacts`, {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(contact)
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(contact),
   }).then((response) => {
-    if(response.status === 201){
+    if (response.status === 201) {
       window.alert("Dados de contato enviados com sucesso!");
       closeModalContact();
-    } else if (!response.ok) {
-      console.log('Erro na requisição');
     } else {
-      return response.json()
-    }   
-  })
-
-}
-
-function deleteCar(event, carId){
-  fetch(`${apiUrl}/cars/${carId}`, {method: 'DELETE'}).
-  then((response) => {
-    if(response.status === 200){
-      window.alert("Carro deletado com sucesso!")
-      console.log(response.status)
+      throw new Error(response.status);
     }
-  })  
+  });
 }
 
-async function getCarById(){
+function deleteCar(event, carId) {
+  if (confirm("Deseja realmente deletar este carro?")) {
+    fetch(`${apiUrl}/cars/${carId}`, { method: "DELETE" }).then((response) => {
+      if (response.status === 200) {
+        window.location.reload();
+        window.alert("Carro deletado com sucesso!");
+      } else {
+        throw new Error(response.status);
+      }
+    });
+  } else {
+    window.location.reload();
+  }
+}
+
+async function getCarById(carId) {
   try {
-    const urlParams = new URLSearchParams(window.location.search);
-    const carIdParam = urlParams.get("carId");
-    const response = await fetch(`${apiUrl}/cars/${carIdParam}`)
-    const data = await response.json()
+    const response = await fetch(`${apiUrl}/cars/${carId}`);
+    const data = await response.json();
 
-    var getCar = document.getElementById("get-car")
-    getCar.innerText = `${data.Brand} ${data.Model} ${data.Year}`
+    var getCar = document.getElementById("get-car");
+    getCar.innerText = `${data.Brand} ${data.Model} ${data.Year}`;
 
-    var getPriceField = document.getElementById("get-car-price")
-    getPriceField.innerText = `R$ ${data.Price}`
+    var getPriceField = document.getElementById("get-car-price");
+    getPriceField.innerText = `R$ ${data.Price}`;
+
+    await getContactsByCar(data.Contacts)
 
   } catch (error) {
-    console.log(error)
+    throw new Error(error);
   }
+}
+
+async function getContactsByCar(listContacts) {
+
+  const contactList = document.getElementById("contact-list");
+
+  if(listContacts.length == 0){
+    const anyContacts = document.createElement("span");
+    anyContacts.innerText = "Nenhum contato para este veículo"
+    contactList.appendChild(anyContacts)
+  }
+
+  listContacts.forEach((contact) => {
+    const contactItem = document.createElement("li");
+    contactItem.classList.add("contact-item");
+
+    const txtName = document.createElement("span");
+    txtName.classList.add("txt-contact");
+    txtName.innerText = `Nome: ${contact.Name}`;
+
+    const txtEmail = document.createElement("span");
+    txtEmail.classList.add("txt-email");
+    txtEmail.innerText = `Email: ${contact.Email}`;
+
+    const txtPhone = document.createElement("span");
+    txtPhone.classList.add("txt-phone");
+    txtPhone.innerText = `Telefone: ${contact.Phone}`;
+
+    contactList.appendChild(contactItem);
+    contactItem.appendChild(txtName);
+    contactItem.appendChild(txtEmail);
+    contactItem.appendChild(txtPhone);
+  });
 }
 
 function formValidate(inputField, submitButton) {
-  var count = 0
-  for(let index = 0; index < inputField.length; index++){
-    if(inputField[index].value === ""){
-      count++
-    }    
+  var count = 0;
+  for (let index = 0; index < inputField.length; index++) {
+    if (inputField[index].value === "") {
+      count++;
+    }
   }
-  if(count == 0) {
-    submitButton.disabled = false
+  if (count == 0) {
+    submitButton.disabled = false;
   } else {
-    submitButton.disabled = true
+    submitButton.disabled = true;
   }
 }
 
-function applyMask(input, mask){
+function applyMask(input, mask) {
   const maskOptions = {
-    mask: mask
-  }
-  const masked = IMask(input, maskOptions)
+    mask: mask,
+  };
+  const masked = IMask(input, maskOptions);
 
-  return masked
+  return masked;
 }
 
-function openModalContact() {
+async function openModalContact() {
   var modal = document.getElementById("form-contact");
   modal.style.display = "block";
-  getCarById()
-  var nameInput = document.getElementById("name")
-  var emailInput = document.getElementById("email")
-  var phoneInput = document.getElementById("phone")
-  applyMask(phoneInput, '(00) 0 0000-0000')
+  if (selectedCarId !== null) {
+    await getCarById(selectedCarId);
+  }
+  var nameInput = document.getElementById("name");
+  var emailInput = document.getElementById("email");
+  var phoneInput = document.getElementById("phone");
+  applyMask(phoneInput, "(00) 0 0000-0000");
 
-  inputFields = [nameInput, emailInput, phoneInput]
+  inputFields = [nameInput, emailInput, phoneInput];
 
-  var submitButton = document.querySelector(".submit-button")
-  submitButton.disabled = true
+  var submitButton = document.querySelector(".submit-button");
+  submitButton.disabled = true;
 
-  for(var index = 0; index < inputFields.length; index++){
-    inputFields[index].addEventListener("input", () => {formValidate(inputFields, submitButton)})
+  for (var index = 0; index < inputFields.length; index++) {
+    inputFields[index].addEventListener("input", () => {
+      formValidate(inputFields, submitButton);
+    });
   }
 }
 
@@ -216,49 +254,67 @@ function openModalCar() {
   var modal = document.getElementById("form-car");
   modal.style.display = "block";
 
-  var brandInput = document.getElementById("brand")
-  var modelInput = document.getElementById("model")
-  var yearInput = document.getElementById("year")
+  var brandInput = document.getElementById("brand");
+  var modelInput = document.getElementById("model");
+  var yearInput = document.getElementById("year");
 
-  var priceInput = document.getElementById("price")
+  var priceInput = document.getElementById("price");
   applyMask(priceInput, [
-    { mask: '' },
+    { mask: "" },
     {
-      mask: 'R$ num',
+      mask: "R$ num",
       lazy: false,
       blocks: {
         num: {
           mask: Number,
-          scale: 2,
-          thousandsSeparator: '.',
-          padFractionalZeros: true,
-          radix: ',',
-          mapToRadix: ['.'],
-        }
-      }
-    }
-  ])
+          thousandsSeparator: ".",
+          mapToRadix: ["."],
+        },
+      },
+    },
+  ]);
 
-  inputFields = [brandInput, modelInput, yearInput]
+  inputFields = [brandInput, modelInput, yearInput];
 
-  var submitButton = document.getElementById("submit-car-button")
-  submitButton.disabled = true
+  var submitButton = document.getElementById("submit-car-button");
+  submitButton.disabled = true;
 
-  console.log("asjdahkjh")
+  for (var index = 0; index < inputFields.length; index++) {
+    inputFields[index].addEventListener("input", () => {
+      formValidate(inputFields, submitButton);
+    });
+  }
+}
 
-  for(var index = 0; index < inputFields.length; index++){
-    inputFields[index].addEventListener("input", () => {formValidate(inputFields, submitButton)})
+async function changeContactList() {
+  var formContact = document.querySelector(".content");
+  var listContacts = document.querySelector(".car-contacts");
+
+  if (formContact.style.display == "none") {
+    formContact.style.display = "block";
+  } else {
+    formContact.style.display = "none";
+  }
+
+  if (listContacts.style.display == "flex") {
+    listContacts.style.display = "none";
+  } else {
+    listContacts.style.display = "flex";
   }
 }
 
 function closeModalContact() {
   var modal = document.getElementById("form-contact");
+  document.getElementById("contact-form").reset();
   modal.style.display = "none";
   history.pushState({}, "", webUrl);
+  window.location.reload();
 }
 
 function closeModalCar() {
   var modal = document.getElementById("form-car");
+  document.getElementById("contact-form").reset();
+
   modal.style.display = "none";
   history.pushState({}, "", webUrl);
 }
@@ -271,27 +327,33 @@ function getCarIdAndOpenModal(carId) {
 
 document.addEventListener("DOMContentLoaded", fetchAndRenderCars);
 
-var submitButton = document.querySelector(".submit-button")
-submitButton.addEventListener("click", addContact)
+var submitButton = document.querySelector(".submit-button");
+submitButton.addEventListener("click", addContact);
 
-var submitCarButton = document.getElementById("submit-car-button")
-submitCarButton.addEventListener("click", addCar)
+var submitCarButton = document.getElementById("submit-car-button");
+submitCarButton.addEventListener("click", addCar);
 
 var closeButton = document.querySelector(".closed");
 closeButton.addEventListener("click", function () {
-  history.pushState({}, "");
   closeModalContact();
 });
 
 var closeCar = document.querySelector(".closed-car");
 closeCar.addEventListener("click", function () {
-  var modal = document.getElementById("form-car");
-  if(modal.style.display == "block"){
-    modal.style.display = "none";
-  }
+  closeModalCar();
 });
 
-var addCarButton = document.querySelector(".add-car-button")
+var addCarButton = document.querySelector(".add-car-button");
 addCarButton.addEventListener("click", function () {
-  openModalCar()
+  openModalCar();
+});
+
+var listContacts = document.querySelector(".span-contacts");
+listContacts.addEventListener("click", function () {
+  changeContactList();
+});
+
+var backButton = document.querySelector(".back-button");
+backButton.addEventListener("click", function () {
+  changeContactList();
 });
