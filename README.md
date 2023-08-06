@@ -4,7 +4,7 @@
 
 <br>
 
-<p align="left">Um sistema de listagem de veículos como possibilidade de seleção de veículos e envio de informações de contato. Todos os dados são salvos em um banco de dados SQL.</p>
+<p align="left">Um sistema de listagem de veículos com possibilidade de seleção de veículos e o envio de informações de contato, bem como a consulta dos dados do veículo e dos contatos enviados. Estes dados são todos salvos em um banco de dados SQL.</p>
 
 <br>
 
@@ -24,33 +24,33 @@
 
 ## ℹ️ Como rodar o sistema localmente
 
-### É necessário ter instalado em sua máquina o [Go](https://go.dev/) e [MySQL](https://www.mysql.com/).
+### É necessário ter instalado em sua máquina o [Go](https://go.dev/) e o [MySQL](https://www.mysql.com/), também é desejável um bom editor de textos como por exemplo o [Visual Studio Code](https://code.visualstudio.com/).
 
-### 🎲 Clonando e configurando o banco de dados
+### 🎲 Clonando o projeto e configurando o banco de dados
 
 #### Clone o projeto
 ```bash
 # Em um terminal clone o repositório com o comando
-$ git clone <https://github.com/silasprd/oncar-job-challenge>
+$ git clone https://github.com/silasprd/oncar-job-challenge
 ```
 
 #### Você precisará criar um banco de dados para o sistema.
 ```bash
-# No MySQL Workbench ou alguma outra ferramenta gerenciadora de banco de dados, execute o comando
+# No MySQL Workbench ou alguma outra ferramenta gerenciadora do banco de dados, execute o comando
 $ create database database-name;
-# Você pode substituir o database-name pelo nome que você quiser dar ao seu banco de dados
+# Você pode substituir o database-name pelo nome que você quiser dar ao seu banco de dados.
 ```
 
 #### Dentro da pasta do projeto você precisará acessar o arquivo .env dentro da pasta api.
 ```bash
-# Você pode acessar por linha de comando no próprio terminal com os seguintes comandos
+# Você pode acessar por linha de comando no próprio terminal com o seguinte comando
 $ cd api
 # Você pode abrir a pasta onde contém o arquivo com o seguinte comando
 $ start .
-# Após acessar a pasta você precisará abrir o arquivo em um editor de textos sua escolha
+# Após acessar a pasta você precisará abrir o arquivo em um editor de textos de sua escolha
 ```
 
-#### Sera necessário configurar algumas credenciais de usuário no projeto
+#### Será necessário configurar algumas credenciais do banco de dados no projeto
 ```bash
 # Essas variáveis de ambiente representam as que você utiliza para conectar ao seu banco de dados local.
 DB_USER='nome de usuário do banco'
@@ -59,9 +59,9 @@ DB_NAME='nome do banco de dados criado para o sistema'
 DB_HOST='IP host local'
 DB_PORT='Porta em que o banco de dados está rodando localmente'
 ```
-#### Substitua os valores das variáveis pelas suas credenciais, salve o arquivo e pode fechá-lo
+#### Substitua os valores das variáveis pelas credenciais do seu banco de dados, salve o arquivo e pode fechá-lo
 
-### 👨‍💻 Após todas as configurações, ainda na pasta do projeto, rode a aplicação
+### 👨‍💻 Após estas configurações, ainda na pasta do projeto, rode a aplicação
 
 #### Rodando a aplicação
 ```bash
