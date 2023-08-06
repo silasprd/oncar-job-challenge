@@ -84,7 +84,7 @@ $ go test -v ./...
 
 <details>
     <summary>Estrutura das pastas e arquivos na raiz</summary>
-    <span style="font-style: bold">/.env:</span><span> Arquivo de definição das variáveis globais.</span><br>
+    <b style="font-style: bold">/.env:</b><span> Arquivo de definição das variáveis globais.</span><br>
     <span style="font-style: bold">/.gitgnore:</span><span> Arquivo de configuração do rastreamento de controle de versão do git.</span><br>
     <span style="font-style: bold">/main.go:</span><span> Arquivo principal onde são executados os servidores web e api.</span><br>
     <span style="font-style: bold">/api:</span><span> Onde estão toda a estrutura e os arquivos da API desenvolvida na linguagem Go.</span><br>
