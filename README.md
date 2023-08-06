@@ -84,16 +84,16 @@ $ go test -v ./...
 
 <details>
     <summary>Estrutura das pastas e arquivos na raiz</summary>
-    <b style="font-style: bold">/.env:</b><span> Arquivo de definição das variáveis globais.</span><br>
-    <span style="font-style: bold">/.gitgnore:</span><span> Arquivo de configuração do rastreamento de controle de versão do git.</span><br>
-    <span style="font-style: bold">/main.go:</span><span> Arquivo principal onde são executados os servidores web e api.</span><br>
-    <span style="font-style: bold">/api:</span><span> Onde estão toda a estrutura e os arquivos da API desenvolvida na linguagem Go.</span><br>
-    <span style="font-style: bold">/api/core/:</span><span> Modelos, serviços e controladores desenvolvidos para atender as requisições.</span><br>
-    <span style="font-style: bold">/api/core/model/:</span><span> Modelo dos dados utilizados na API.</span><br>
-    <span style="font-style: bold">/api/core/service/:</span><span> Toda a lógica do negócio, onde são executadas as querys para manipulação dos dados no banco.</span><br>
-    <span style="font-style: bold">/api/core/controller/:</span><span> Onde estão os controladores, responsáveis por fazer as requisições http.</span><br>
-    <span style="font-style: bold">/api/db/:</span><span> Aqui são feitas as configurações e conexão com o banco de dados, e também a auto migração das tabelas.</span><br>
-    <span style="font-style: bold">/api/routes/:</span><span> Todas as definições de rotas utilizadas na aplicação.</span><br>
-    <span style="font-style: bold">/api/test/:</span><span> Esta pasta contém todos os arquivos de teste. A pasta tem a mesma estrutura da pasta 'api'. Esta pasta deve simular a pasta api.</span><br>
+    <span style="font-weight: bolder">/.env:</span><span> Arquivo de definição das variáveis globais.</span><br>
+    <span style="font-weight: bolder">/.gitgnore:</span><span> Arquivo de configuração do rastreamento de controle de versão do git.</span><br>
+    <span style="font-weight: bolder">/main.go:</span><span> Arquivo principal onde são executados os servidores web e api.</span><br>
+    <span style="font-weight: bolder">/api:</span><span> Onde estão toda a estrutura e os arquivos da API desenvolvida na linguagem Go.</span><br>
+    <span style="font-weight: bolder">/api/core/:</span><span> Modelos, serviços e controladores desenvolvidos para atender as requisições.</span><br>
+    <span style="font-weight: bolder">/api/core/model/:</span><span> Modelo dos dados utilizados na API.</span><br>
+    <span style="font-weight: bolder">/api/core/service/:</span><span> Toda a lógica do negócio, onde são executadas as querys para manipulação dos dados no banco.</span><br>
+    <span style="font-weight: bolder">/api/core/controller/:</span><span> Onde estão os controladores, responsáveis por fazer as requisições http.</span><br>
+    <span style="font-weight: bolder">/api/db/:</span><span> Aqui são feitas as configurações e conexão com o banco de dados, e também a auto migração das tabelas.</span><br>
+    <span style="font-weight: bolder">/api/routes/:</span><span> Todas as definições de rotas utilizadas na aplicação.</span><br>
+    <span style="font-weight: bolder">/api/test/:</span><span> Esta pasta contém todos os arquivos de teste. A pasta tem a mesma estrutura da pasta 'api'. Esta pasta deve simular a pasta api.</span><br>
     
 </details>
