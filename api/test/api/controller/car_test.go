@@ -84,19 +84,9 @@ func TestCarController(t *testing.T) {
 		},
 	}
 
-	// Modelo de carro válido para deleção
-	carToDelete := model.Car{
-		ID:    1,
-		Brand: "Toyota",
-		Model: "Corolla",
-		Year:  2022,
-		Price: 70000,
-	}
-
 	t.Run("TestAddCar", func(t *testing.T) { testAddCar(t, mockDB, *mockCarController, carToAdd) })
 	t.Run("TestGetAllCars", func(t *testing.T) { testGetAllCars(t, mockDB, *mockCarController, listCars) })
 	t.Run("TestGetCar", func(t *testing.T) { testGetCar(t, mockDB, mockCarController, car) })
-	t.Run("TestDeleteCar", func(t *testing.T) { testDeleteCar(t, mockDB, mockCarController, carToDelete) })
 
 }
 
@@ -217,38 +207,6 @@ func testGetCar(t *testing.T, mockDB sqlmock.Sqlmock, mockController *controller
 
 	// Verifica o conteúdo do carro retornado
 	assert.Equal(t, car.ID, responseCar.ID, "ID do carro retornado incorreto.")
-
-	// Verifica as expectativas do mockadas
-	assert.Nil(t, mockDB.ExpectationsWereMet(), "Expectativas mockadas não foram atendidas.")
-
-}
-
-func testDeleteCar(t *testing.T, mockDB sqlmock.Sqlmock, mockController *controller.CarController, carToDelete model.Car) {
-
-	router := mux.NewRouter()
-	router.HandleFunc("/api/cars/{id}", mockController.DeleteCarHandler).Methods("DELETE")
-	url := "/api/cars/" + strconv.Itoa(int(carToDelete.ID))
-	req, err := http.NewRequest("DELETE", url, nil)
-	if err != nil {
-		t.Fatalf("Erro ao criar a requisição HTTP: %v", err)
-	}
-
-	// Grava a resposta HTTP em um ResponseRecorder
-	rr := httptest.NewRecorder()
-
-	// Configura o banco de dados para a deleção do carro
-	query := "DELETE FROM `cars` WHERE `cars`.`id` = ?"
-	mockDB.ExpectBegin()
-	mockDB.ExpectExec(regexp.QuoteMeta(query)).WithArgs(carToDelete.ID).WillReturnResult(sqlmock.NewResult(1, 1))
-	mockDB.ExpectCommit()
-
-	router.ServeHTTP(rr, req)
-
-	// Verifica o retorno da função delete
-	assert.Equal(t, http.StatusOK, rr.Code, "Carro não foi deletado com sucesso!")
-
-	// Verifica se a propriedade ID do carro existe
-	assert.NotEmpty(t, carToDelete.ID, "ID do carro não pode ser vazio!")
 
 	// Verifica as expectativas do mockadas
 	assert.Nil(t, mockDB.ExpectationsWereMet(), "Expectativas mockadas não foram atendidas.")

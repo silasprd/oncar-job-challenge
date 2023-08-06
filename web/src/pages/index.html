@@ -14,6 +14,19 @@
             <div class="title">
                 <h1 class="nav-title">onCar Job Challenge</h1>
             </div>
+
+            <div class="filter">
+                <label for="filterType" class="txt-filter">Filtrar:</label>
+                <select id="filterType">
+                    <option value="" selected="true" disabled>Selecione um filtro</option>
+                    <option value="brand">Marca</option>
+                    <option value="model">Modelo</option>
+                    <option value="year">Ano</option>
+                </select>
+                <input type="text" id="filterValue" placeholder="Digite aqui">
+                <button id="filter-button" class="filter-button">FILTRAR</button>
+            </div>
+
             <div class="add-car">
                 <button class="add-car-button">Adicionar Carro</button>
             </div>
@@ -29,7 +42,7 @@
             <div class="content">
                 <div class="get-car-container">
                     <span id="get-car"></span>
-                    <span id="get-car-price"></span>  
+                    <span id="get-car-price"></span>
                 </div>
                 <h2 class="form-title">Preencha suas informações de Contato</h2>
                 <form id="contact-form" class="contact-form">

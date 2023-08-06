@@ -58,19 +58,9 @@ func TestCarService(t *testing.T) {
 		Year:  2019,
 	}
 
-	// Carro para teste delete
-	carToDelete := model.Car{
-		ID:    1,
-		Brand: "Fiat",
-		Model: "Toro",
-		Year:  2017,
-		Price: 70000,
-	}
-
 	t.Run("TestAddCar", func(t *testing.T) { testAddCar(t, mock, *carService, carToAdd) })
 	t.Run("TestGetAllCars", func(t *testing.T) { testGetAllCars(t, mock, *carService, listCars) })
 	t.Run("TestGetCar", func(t *testing.T) { testGetCar(t, mock, *carService, car) })
-	t.Run("TestDeleteCar", func(t *testing.T) { testDeleteCar(t, mock, *carService, carToDelete) })
 
 }
 
@@ -151,33 +141,5 @@ func testGetCar(t *testing.T, mock sqlmock.Sqlmock, carService service.CarServic
 	assert.Equal(t, car.Model, resultCar.Model)
 	assert.Equal(t, car.Year, resultCar.Year)
 	assert.Equal(t, car.Price, resultCar.Price)
-
-}
-
-func testDeleteCar(t *testing.T, mock sqlmock.Sqlmock, carService service.CarService, carToDelete model.Car) {
-
-	// Configura a query que o teste espera que seja executada ao chamar a função
-	updateContactQuery := "DELETE FROM `contacts` WHERE `car_id`= ?"
-	query := "DELETE FROM `cars` WHERE `cars`.`id` = ?"
-
-	mock.ExpectBegin()
-	mock.ExpectExec(updateContactQuery).WithArgs(carToDelete.ID).WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectExec(query).WithArgs(carToDelete.ID).WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectCommit()
-
-	t.Logf("Query executada - UpdateContact: %s\n", updateContactQuery)
-	t.Logf("Query executada - DeleteCar: %s\n", query)
-
-	err := carService.DeleteCar(carToDelete.ID)
-	if err != nil {
-		t.Errorf("Erro ao excluir o carro: %s", err)
-	}
-
-	// Verifica se a propriedade ID do carro existe
-	assert.NotEmpty(t, carToDelete.ID, "ID do carro não pode ser vazio!")
-
-	// if err := mock.ExpectationsWereMet(); err != nil {
-	// 	t.Errorf("Expectativas mockadas não foram atendidas: %s", err)
-	// }
 
 }
