@@ -25,11 +25,19 @@
                     <option value="year">Ano</option>
                 </select>
                 <input type="text" id="filterValue" placeholder="Digite aqui">
-                <button id="filter-button" class="filter-button">FILTRAR</button>
+                <button id="filter-button" class="filter-button">
+                    <span class="material-symbols-outlined">
+                        search
+                    </span>
+                </button>
             </div>
 
             <div class="add-car">
-                <button class="add-car-button">Adicionar Carro</button>
+                <button class="add-car-button">
+                    <span class="material-symbols-outlined">
+                        add
+                    </span>
+                </button>
             </div>
         </div>
         <ul id="carList" class="car-list">
@@ -39,7 +47,7 @@
             <span class="material-symbols-outlined" id="prevPage">
                 first_page
             </span>
-            <span><span id="currentPage">1</span></span>
+            <span id="currentPage">1</span>
             <span class="material-symbols-outlined" id="nextPage">
                 last_page
             </span>
@@ -82,7 +90,7 @@
 
                 </ul>
                 <div class="back-button">
-                    <span>Voltar</span>
+                    <span id="back-button">Voltar</span>
                 </div>
             </div>
         </div>

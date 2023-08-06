@@ -13,13 +13,29 @@ async function fetchAndRenderCars() {
     let data = await response.json();
     const carList = document.getElementById('carList');
 
+    let dataFiltered = filteredData(data)
+
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const carsPerPage = data.slice(startIndex, endIndex);
+    const carsPerPage = dataFiltered.slice(startIndex, endIndex);
 
     maxPage = Math.ceil(data.length / itemsPerPage);
 
-    filteredData(carsPerPage).forEach(car => {
+    var closeButton = document.querySelector(".closed");
+    closeButton.addEventListener("click", closeModalContact);
+
+    if (dataFiltered == 0) {
+      const noData = document.createElement("span")
+      noData.innerText = 'Nenhum carro encontrado!'
+      noData.classList.add("nodata-span")
+      carList.appendChild(noData)
+      carList.style.gridTemplateColumns = '1fr'
+      return;
+    } else {
+      carList.style.gridTemplateColumns = '1fr 1fr 1fr 1fr'
+    }
+
+    carsPerPage.forEach(car => {
       const listItem = document.createElement('li')
       listItem.classList.add("card");
 
@@ -65,10 +81,9 @@ async function fetchAndRenderCars() {
       listItem.appendChild(deleteButton)
       deleteButton.addEventListener("click", (event) => deleteCar(event, car.ID))
     });
-    var closeButton = document.querySelector(".closed");
-    closeButton.addEventListener("click", closeModalContact);
+
   } catch (error) {
-    console.error('Erro ao buscar e renderizar a lista de carros:', error);
+    throw new Error(error)
   }
 }
 
@@ -101,6 +116,62 @@ function filteredData(data) {
 
 }
 
+async function getCarById() {
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const carIdParam = urlParams.get("carId");
+    const response = await fetch(`${apiUrl}/cars/${carIdParam}`)
+    const data = await response.json()
+
+    var getCar = document.getElementById("get-car")
+    getCar.innerText = `${data.Brand} ${data.Model} ${data.Year}`
+
+    var getPriceField = document.getElementById("get-car-price")
+    getPriceField.innerText = `R$ ${data.Price}`
+    
+    getContactsByCar(data)
+
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+function getContactsByCar(data) {
+
+  const contactList = document.getElementById("contact-list")
+
+  if (data.Contacts.length > 0) {
+    data.Contacts.forEach((contact) => {
+      const listItem = document.createElement('li')
+      listItem.classList.add("card");
+
+      const txtName = document.createElement('span')
+      txtName.classList.add("txt-name")
+      txtName.innerText = `${contact.Name}`
+
+      const txtEmail = document.createElement('span')
+      txtEmail.classList.add("txt-email")
+      txtEmail.innerText = `${contact.Email}`
+
+      const txtPhone = document.createElement('span')
+      txtPhone.classList.add("txt-phone")
+      txtPhone.innerText = `${contact.Phone}`
+
+      listItem.appendChild(txtName)
+      listItem.appendChild(txtEmail)
+      listItem.appendChild(txtPhone)
+      contactList.appendChild(listItem)
+    })
+  } else {
+    contactList.style.display = "flex"
+    const noData = document.createElement('span')
+    noData.innerText = 'Nenhum contato encontrado!'
+    noData.classList.add("nodata-span")
+    contactList.append(noData)
+  }
+
+}
+
 function addCar(event) {
 
   // event.preventDefault()
@@ -121,8 +192,6 @@ function addCar(event) {
     price: priceFloat,
   }
 
-  console.log(car)
-
   fetch(`${apiUrl}/cars`, {
     method: 'POST',
     header: {
@@ -133,8 +202,6 @@ function addCar(event) {
     if (response.status === 201) {
       window.alert("Carro criado co sucesso!")
       closeModalCar();
-    } else if (!response.ok) {
-      console.log("Erro na requisição")
     } else {
       return response.json()
     }
@@ -144,7 +211,7 @@ function addCar(event) {
 
 function addContact(event) {
 
-  event.preventDefault()
+  //event.preventDefault()
 
   const nameInput = document.getElementById("name");
   const emailInput = document.getElementById("email");
@@ -170,8 +237,6 @@ function addContact(event) {
     if (response.status === 201) {
       window.alert("Dados de contato enviados com sucesso!");
       closeModalContact();
-    } else if (!response.ok) {
-      console.log('Erro na requisição');
     } else {
       return response.json()
     }
@@ -185,28 +250,9 @@ function deleteCar(event, carId) {
       then((response) => {
         if (response.status === 200) {
           window.alert("Carro deletado com sucesso!")
-          console.log(response.status)
           window.location.reload()
         }
       })
-  }
-}
-
-function getCarById() {
-  try {
-    const urlParams = new URLSearchParams(window.location.search);
-    const carIdParam = urlParams.get("carId");
-    const response = fetch(`${apiUrl}/cars/${carIdParam}`)
-    const data = response.json()
-
-    var getCar = document.getElementById("get-car")
-    getCar.innerText = `${data.Brand} ${data.Model} ${data.Year}`
-
-    var getPriceField = document.getElementById("get-car-price")
-    getPriceField.innerText = `R$ ${data.Price}`
-
-  } catch (error) {
-    console.log(error)
   }
 }
 
@@ -224,6 +270,7 @@ function formValidate(inputField, submitButton) {
   }
 }
 
+
 function applyMask(input, mask) {
   const maskOptions = {
     mask: mask
@@ -235,7 +282,7 @@ function applyMask(input, mask) {
 
 function openModalContact() {
   var modal = document.getElementById("form-contact");
-  modal.style.display = "block";
+  modal.style.display = "flex";
   getCarById()
   var nameInput = document.getElementById("name")
   var emailInput = document.getElementById("email")
@@ -254,7 +301,7 @@ function openModalContact() {
 
 function openModalCar() {
   var modal = document.getElementById("form-car");
-  modal.style.display = "block";
+  modal.style.display = "flex";
 
   var brandInput = document.getElementById("brand")
   var modelInput = document.getElementById("model")
@@ -282,23 +329,39 @@ function openModalCar() {
   var submitButton = document.getElementById("submit-car-button")
   submitButton.disabled = true
 
-  console.log("asjdahkjh")
-
   for (var index = 0; index < inputFields.length; index++) {
     inputFields[index].addEventListener("input", () => { formValidate(inputFields, submitButton) })
   }
+}
+
+function openContacts() {
+  var contactList = document.getElementById("car-contacts")
+  var contactForm = document.querySelector(".content")
+
+  contactForm.style.display = 'none'
+  contactList.style.display = 'flex'
+}
+
+function backContactForm() {
+  var contactList = document.getElementById("car-contacts")
+  var contactForm = document.querySelector(".content")
+
+  contactForm.style.display = 'block'
+  contactList.style.display = 'none'
 }
 
 function closeModalContact() {
   var modal = document.getElementById("form-contact");
   modal.style.display = "none";
   history.pushState({}, "", webUrl);
+  window.location.reload()
 }
 
 function closeModalCar() {
   var modal = document.getElementById("form-car");
   modal.style.display = "none";
   history.pushState({}, "", webUrl);
+  window.location.reload()
 }
 
 function getCarIdAndOpenModal(carId) {
@@ -329,10 +392,7 @@ closeButton.addEventListener("click", function () {
 
 var closeCar = document.querySelector(".closed-car");
 closeCar.addEventListener("click", function () {
-  var modal = document.getElementById("form-car");
-  if (modal.style.display == "block") {
-    modal.style.display = "none";
-  }
+  closeModalCar()
 });
 
 var addCarButton = document.querySelector(".add-car-button")
@@ -343,6 +403,15 @@ addCarButton.addEventListener("click", function () {
 var filterButton = document.getElementById("filter-button")
 filterButton.addEventListener("click", function () {
   fetchAndRenderCars()
+})
+
+var spanContacts = document.querySelector(".span-contacts")
+spanContacts.addEventListener("click", function () {
+  openContacts();
+})
+
+document.getElementById("back-button").addEventListener('click', function () {
+  backContactForm()
 })
 
 document.getElementById('prevPage').addEventListener('click', () => {

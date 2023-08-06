@@ -69,6 +69,8 @@ DB_PORT='Porta em que o banco de dados está rodando localmente'
 $ cd api
 # Rode o projeto com o comando
 $ go run main.go
+# A aplicação estará acessível em http://localhost:3000
+# Certifique-se de não ter nada rodando localmente na porta 3000.
 ```
 
 #### Rodando os testes
@@ -79,3 +81,19 @@ $ cd test
 $ go test -v ./...
 # Este comando irá executar todos os arquivos de teste
 ```
+
+<details>
+    <summary>Estrutura das pastas e arquivos na raiz</summary>
+    <span style="font-weight: 600">/.env:</span><span> Arquivo de definição das variáveis globais.</span>
+    <span style="font-weight: 600">/.gitgnore:</span><span> Arquivo de configuração do rastreamento de controle de versão do git.</span>
+    <span style="font-weight: 600">/main.go:</span><span> Arquivo principal onde são executados os servidores web e api.</span>
+    <span style="font-weight: 600">/api:</span><span> Onde estão toda a estrutura e os arquivos da API desenvolvida na linguagem Go.</span>
+    <span style="font-weight: 600">/api/core/:</span><span> Modelos, serviços e controladores desenvolvidos para atender as requisições.</span>
+    <span style="font-weight: 600">/api/core/model/:</span><span> Modelo dos dados utilizados na API.</span>
+    <span style="font-weight: 600">/api/core/service/:</span><span> Toda a lógica do negócio, onde são executadas as querys para manipulação dos dados no banco.</span>
+    <span style="font-weight: 600">/api/core/controller/:</span><span> Onde estão os controladores, responsáveis por fazer as requisições http.</span>
+    <span style="font-weight: 600">/api/db/:</span><span> Aqui são feitas as configurações e conexão com o banco de dados, e também a auto migração das tabelas.</span>
+    <span style="font-weight: 600">/api/routes/:</span><span> Todas as definições de rotas utilizadas na aplicação.</span>
+    <span style="font-weight: 600">/api/test/:</span><span> Esta pasta contém todos os arquivos de teste. A pasta tem a mesma estrutura da pasta 'api'. Esta pasta deve simular a pasta api.</span>
+    
+</details>

@@ -26,7 +26,6 @@ func ConfigureRoutes(dbConn *gorm.DB) *mux.Router {
 	router.HandleFunc("/contacts", contactController.ListContactsHandler).Methods("GET")
 	router.HandleFunc("/contacts/{id}", contactController.GetContactHandler).Methods("GET")
 	router.HandleFunc("/contacts", contactController.AddContactHandler).Methods("POST")
-	// router.HandleFunc("/contacts/{id}", carController.DeleteCarHandler).Methods("DELETE")
 
 	return router
 }

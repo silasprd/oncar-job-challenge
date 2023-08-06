@@ -18,7 +18,7 @@ func corsMiddleware(next http.Handler) http.Handler {
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
-		// Se a requisição for um OPTIONS (verificação de pré-voo), não é necessário prosseguir com a lógica da rota
+		// Verificando se a requisição for um OPTIONS (verificação de pré-voo)
 		if r.Method == "OPTIONS" {
 			return
 		}
@@ -30,8 +30,16 @@ func corsMiddleware(next http.Handler) http.Handler {
 
 func main() {
 
-	// Definindo o caminho do diretório web
+	// Definindo o caminho do diretório dos arquivos web
 	webDir := "../web/src"
+	// Executando servidor web
+	startWeb(webDir)
+
+	//Executando servidor da api
+	startApi()
+}
+
+func startWeb(webDir string) {
 	absWebDir, err := filepath.Abs(webDir)
 	if err != nil {
 		fmt.Println("Erro ao obter o caminho absoluto do diretório web:", err)
@@ -49,12 +57,14 @@ func main() {
 	// Rota para servir os arquivos estáticos (CSS, JS, etc.)
 	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
 
-	fmt.Println("Servidor Web rodando na porta 3000")
+	fmt.Println("Acesse em: > http://localhost:3000")
 	go func() {
 		// Iniciar o servidor na porta 3000
 		http.ListenAndServe(":3000", nil)
 	}()
+}
 
+func startApi() {
 	// Configurar o roteador da API usando o pacote gorilla/mux
 	apiRouter := mux.NewRouter()
 
@@ -82,7 +92,6 @@ func main() {
 	}
 
 	router := routes.ConfigureRoutes(dbConn)
-	fmt.Println("Servidor rodando na porta 8080")
 
 	apiRouter.PathPrefix("/").Handler(router)
 	http.ListenAndServe(":8080", apiRouter)
