@@ -3,14 +3,23 @@ let selectedCarId = null;
 let apiUrl = 'http://localhost:8080'
 let webUrl = 'http://localhost:3000/'
 
+let currentPage = 1;
+let itemsPerPage = 12;
+let maxPage = 0
+
 async function fetchAndRenderCars() {
   try {
     const response = await fetch(`${apiUrl}/cars`);
     let data = await response.json();
-    console.log(data)
     const carList = document.getElementById('carList');
 
-    filteredData(data).forEach(car => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const carsPerPage = data.slice(startIndex, endIndex);
+
+    maxPage = Math.ceil(data.length / itemsPerPage);
+
+    filteredData(carsPerPage).forEach(car => {
       const listItem = document.createElement('li')
       listItem.classList.add("card");
 
@@ -298,7 +307,13 @@ function getCarIdAndOpenModal(carId) {
   openModalContact();
 }
 
+function updatePageInfo() {
+  const currentPageElement = document.getElementById('currentPage');
+  currentPageElement.textContent = currentPage;
+}
+
 document.addEventListener("DOMContentLoaded", fetchAndRenderCars);
+document.addEventListener("DOMContentLoaded", updatePageInfo);
 
 var submitButton = document.querySelector(".submit-button")
 submitButton.addEventListener("click", addContact)
@@ -329,3 +344,19 @@ var filterButton = document.getElementById("filter-button")
 filterButton.addEventListener("click", function () {
   fetchAndRenderCars()
 })
+
+document.getElementById('prevPage').addEventListener('click', () => {
+  if (currentPage > 1) {
+    currentPage--;
+    fetchAndRenderCars();
+    updatePageInfo();
+  }
+});
+
+document.getElementById('nextPage').addEventListener('click', () => {
+  if (currentPage < maxPage) {
+    currentPage++;
+    fetchAndRenderCars();
+    updatePageInfo();
+  }
+});
