@@ -22,9 +22,87 @@
 
 <br>
 
+<details>
+    <summary style="font-size: 18px; font-weight: bolder;">Decisões técnicas</summary>
+    <ul style="list-style: none;">
+        <li>
+            <b>Arquitetura MSC:</b><span>Foi utilizado a Arquitetura MSC na criação da api, para deixar o código bem estruturado, facilitando a manutenção e escalabilidade do código.</span>
+        </li>
+        <li>
+            <b>ORM:</b><span>Utilizamos a biblioteca GORM da linguagem Go, para nos ajudar no mapeamento do objeto-relacional e no uso do banco de dados.</span>
+        </li>
+        <li>
+            <b>Mock de dados com sqlmock:</b><span>Nos testes utilizamos a biblioteca sqlmock para mockagem dos dados, assim sendo possível simular um banco de dados real para realização dos teste unitários.</span>
+        </li>
+        <li>
+            <b>Material Design:</b><span>No frontend, a biblioteca do material io foi utilizada para fornecer acesso a alguns ícones utilizados na parte web.</span>
+        </li>
+    </ul>
+</details>
+
+<br>
+
+<details>
+    <summary style="font-size: 18px; font-weight: bolder;">Estrutura das pastas</summary>
+    <ul style="list-style: none;">
+        <legend style="font-weight: bolder">BACKEND:</legend>
+        <li>
+            <b>/.env:</b><span> Arquivo de definição das variáveis globais.</span>
+        </li>
+        <li>
+            <b>/.gitgnore:</b><span> Arquivo de configuração do rastreamento de controle de versão do git.</span>
+        </li>
+        <li>
+            <b>/main.go:</b><span> Arquivo principal onde são executados os servidores web e api.</span>
+        </li>
+        <li>
+            <b>/api:</b><span> Onde estão toda a estrutura e os arquivos da API desenvolvida na linguagem Go.</span>
+        </li>
+        <li>
+            <b>/api/core/:</b><span> Modelos, serviços e controladores desenvolvidos para atender as requisições.</span>
+        </li>
+        <li>
+            <b>/api/core/model/:</b><span> Modelo dos dados utilizados na API.</span>
+        </li>
+        <li>
+            <b>/api/core/service/:</b><span> Toda a lógica do negócio, onde são executadas as querys para manipulação dos dados no banco.</span>
+        </li>
+        <li>
+            <b>/api/core/controller/:</b><span> Onde estão os controladores, responsáveis por fazer as requisições http.</span>
+        </li>
+        <li>
+            <b>/api/db/:</b><span> Aqui são feitas as configurações e conexão com o banco de dados, e também a auto migração das tabelas.</span>
+        </li>
+        <li>
+            <b>/api/routes/:</b><span> Todas as definições de rotas utilizadas na aplicação.</span>
+        </li>
+        <li>
+            <b>/api/test/:</b><span> Esta pasta contém todos os arquivos de teste. A pasta tem a mesma estrutura da pasta 'api'. Esta pasta deve simular a api para realização dos testes.</span>
+        </li>
+    </ul> 
+    <br>
+    <ul style="list-style: none;">
+        <legend style="font-weight: bolder;">FRONTEND</legend>
+        <li>
+            <b>/web/:</b><span> Aqui estão todos os arquivos utilizados para criação da página web.</span>
+        <li>
+        <li>
+            <b>/web/css:</b><span> Arquivo de estilização da página.</span>
+        </li>
+        <li>
+            <b>/web/pages:</b><span> Arquivos HTML renderizados para a página.</span>
+        </li>
+        <li>
+            <b>/web/script:</b><span> Aqui é onde está a lógica por trás do frontend, onde são feitas as chamadas para a api.</span>
+        </li>
+    </ul>  
+</details>
+
+<br>
+
 ## ℹ️ Como rodar o sistema localmente
 
-### É necessário ter instalado em sua máquina o [Go](https://go.dev/) e o [MySQL](https://www.mysql.com/), também é desejável um bom editor de textos como por exemplo o [Visual Studio Code](https://code.visualstudio.com/).
+#### É necessário ter instalado em sua máquina o [Go](https://go.dev/) e o [MySQL](https://www.mysql.com/), também é desejável um bom editor de textos como por exemplo o [Visual Studio Code](https://code.visualstudio.com/).
 
 ### 🎲 Clonando o projeto e configurando o banco de dados
 
@@ -50,18 +128,18 @@ $ start .
 # Após acessar a pasta você precisará abrir o arquivo em um editor de textos de sua escolha
 ```
 
-#### Será necessário configurar algumas credenciais do banco de dados no projeto
+#### Será necessário configurar algumas credenciais do banco de dados no projeto.
 ```bash
 # Essas variáveis de ambiente representam as que você utiliza para conectar ao seu banco de dados local.
 DB_USER='nome de usuário do banco'
 DB_PASSWORD='senha do banco'
 DB_NAME='nome do banco de dados criado para o sistema'
-DB_HOST='IP host local'
+DB_HOST='IP host local(Geralmente: 127.0.0.1)'
 DB_PORT='Porta em que o banco de dados está rodando localmente'
 ```
-#### Substitua os valores das variáveis pelas credenciais do seu banco de dados, salve o arquivo e pode fechá-lo
+#### Substitua os valores das variáveis pelas credenciais do seu banco de dados, salve o arquivo e pode fechá-lo.
 
-### 👨‍💻 Após estas configurações, ainda na pasta do projeto, rode a aplicação
+### 👨‍💻 Após estas configurações, ainda na pasta do projeto, rode a aplicação.
 
 #### Rodando a aplicação
 ```bash
@@ -82,17 +160,4 @@ $ go test -v ./...
 # Este comando irá executar todos os arquivos de teste
 ```
 
-<details>
-    <summary>Estrutura das pastas e arquivos na raiz</summary>
-    <b>/.env:</b><span> Arquivo de definição das variáveis globais.</span><br>
-    <b>/.gitgnore:</b><span> Arquivo de configuração do rastreamento de controle de versão do git.</span><br>
-    <b>/main.go:</b><span> Arquivo principal onde são executados os servidores web e api.</span><br>
-    <b>/api:</b><span> Onde estão toda a estrutura e os arquivos da API desenvolvida na linguagem Go.</span><br>
-    <b>/api/core/:</b><span> Modelos, serviços e controladores desenvolvidos para atender as requisições.</span><br>
-    <b>/api/core/model/:</b><span> Modelo dos dados utilizados na API.</span><br>
-    <b>/api/core/service/:</b><span> Toda a lógica do negócio, onde são executadas as querys para manipulação dos dados no banco.</span><br>
-    <b>/api/core/controller/:</b><span> Onde estão os controladores, responsáveis por fazer as requisições http.</span><br>
-    <b>/api/db/:</b><span> Aqui são feitas as configurações e conexão com o banco de dados, e também a auto migração das tabelas.</span><br>
-    <b>/api/routes/:</b><span> Todas as definições de rotas utilizadas na aplicação.</span><br>
-    <b>/api/test/:</b><span> Esta pasta contém todos os arquivos de teste. A pasta tem a mesma estrutura da pasta 'api'. Esta pasta deve simular a pasta api.</span><br>  
-</details>
+

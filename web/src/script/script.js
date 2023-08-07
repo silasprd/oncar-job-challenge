@@ -174,7 +174,7 @@ function getContactsByCar(data) {
 
 function addCar(event) {
 
-  // event.preventDefault()
+  event.preventDefault()
 
   const brandInput = document.getElementById("brand");
   const modelInput = document.getElementById("model");
@@ -200,7 +200,7 @@ function addCar(event) {
     body: JSON.stringify(car)
   }).then((response) => {
     if (response.status === 201) {
-      window.alert("Carro criado co sucesso!")
+      window.alert("Carro criado com sucesso!")
       closeModalCar();
     } else {
       return response.json()
@@ -211,7 +211,7 @@ function addCar(event) {
 
 function addContact(event) {
 
-  //event.preventDefault()
+  event.preventDefault()
 
   const nameInput = document.getElementById("name");
   const emailInput = document.getElementById("email");
