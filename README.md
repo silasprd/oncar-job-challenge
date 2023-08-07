@@ -26,16 +26,16 @@
     <summary style="font-size: 18px; font-weight: bolder;">Decisões técnicas</summary>
     <ul style="list-style: none;">
         <li>
-            <b>Arquitetura MSC:</b><span>Foi utilizado a Arquitetura MSC na criação da api, para deixar o código bem estruturado, facilitando a manutenção e escalabilidade do código.</span>
+            <b>Arquitetura MSC:</b><span> Foi utilizado a Arquitetura MSC na criação da api, para deixar o código bem estruturado, facilitando a manutenção e escalabilidade do código.</span>
         </li>
         <li>
-            <b>ORM:</b><span>Utilizamos a biblioteca GORM da linguagem Go, para nos ajudar no mapeamento do objeto-relacional e no uso do banco de dados.</span>
+            <b>ORM:</b><span> Utilizamos a biblioteca GORM da linguagem Go, para nos ajudar no mapeamento do objeto-relacional e no uso do banco de dados.</span>
         </li>
         <li>
-            <b>Mock de dados com sqlmock:</b><span>Nos testes utilizamos a biblioteca sqlmock para mockagem dos dados, assim sendo possível simular um banco de dados real para realização dos teste unitários.</span>
+            <b>Mock de dados com sqlmock:</b><span> Nos testes utilizamos a biblioteca sqlmock para mockagem dos dados, assim sendo possível simular um banco de dados real para realização dos teste unitários.</span>
         </li>
         <li>
-            <b>Material Design:</b><span>No frontend, a biblioteca do material io foi utilizada para fornecer acesso a alguns ícones utilizados na parte web.</span>
+            <b>Material Design:</b><span> No frontend, a biblioteca do material io foi utilizada para fornecer acesso a alguns ícones utilizados na parte web.</span>
         </li>
     </ul>
 </details>
